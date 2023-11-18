@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: 'white',
-    fontSize: scale(16),
+    fontSize: scale(14),
     textAlign: 'center',
     fontFamily: Fonts.Poppins400
   },

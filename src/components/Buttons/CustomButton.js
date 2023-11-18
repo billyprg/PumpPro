@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import { Colors, Fonts } from '../../config';
 
 const CustomButton = (props) => {
   return (
@@ -14,16 +15,17 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: 'red',
-    borderRadius: scale(12),
+    backgroundColor: Colors.Primary,
+    borderRadius: scale(10),
     padding: scale(10),
     alignItems: 'center',
     justifyContent: 'center',
+    marginVertical:verticalScale(15)
   },
 
   text: {
-    color: 'white',
+    color: Colors.White,
     fontSize: scale(16),
-    fontWeight: '700'
+    fontFamily: Fonts.Poppins700
   },
 });

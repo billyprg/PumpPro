@@ -88,6 +88,7 @@ const OnBoarding = () => {
        style={{flex: 1, justifyContent: 'center'}}>
        <CustomButton
          text={'Continue'}
+         restyleContainer = {{marginVertical:0,backgroundColor:'red'}}
          onPress={() => NavigationService.replace('OnBoardingTwo')}
        />
      </Animatable.View>

@@ -21,9 +21,7 @@ export default InventoryCard;
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    // backgroundColor: Colors.Primary,
     borderRadius: scale(10),
-    // paddingHorizontal: moderateScale(10),
     overflow:'hidden'
   },
   typeView:{
@@ -36,7 +34,8 @@ const styles = StyleSheet.create({
   textOne:{
     fontFamily:Fonts.Poppins600,
     fontSize:scale(14),
-    color:Colors.White
+    color:Colors.White,
+    textAlign:'center'
   },
   quantityView:{
     backgroundColor: '#F3F6FF',
@@ -47,7 +46,8 @@ const styles = StyleSheet.create({
   },
   textTwo:{
     fontFamily:Fonts.Poppins400,
-    fontSize:scale(14),
-    color:Colors.Black
+    fontSize:scale(13),
+    color:Colors.Black,
+    
   }
 });

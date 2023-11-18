@@ -13,7 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Feather from 'react-native-vector-icons/Feather';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import { Colors } from '../../config';
+import { Colors, Fonts } from '../../config';
 const CustomInput = forwardRef((props, ref) => {
   const [characterCount, setCharacterCount] = useState(0);
 
@@ -25,7 +25,7 @@ const CustomInput = forwardRef((props, ref) => {
   });
   return (
     <>
-      {props.uppertrue ? (
+      {props.upperText ? (
         <View style={[{marginTop: verticalScale(25)}, props.RestyleUpperView]}>
           <Text style={[styles.UpperText, props.restyleUpperText]}>
             {props.upperText}
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     // fontFamily: Font.Poppins500,
     color: Colors.Black,
     fontSize: scale(16),
+    fontFamily: Fonts.Poppins600
   },
   InputStyles: {
     flex: 1,

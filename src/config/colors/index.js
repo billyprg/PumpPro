@@ -4,6 +4,7 @@ const Colors = {
     Transparent: "transparent",
     Primary: "#d94826",
     Yellow:'#FFC503',
+    containerColor: '#F3F6FF',
     Black: "#000000",
     DarkGray: "#1E1E22",
     White: "#ffffff",

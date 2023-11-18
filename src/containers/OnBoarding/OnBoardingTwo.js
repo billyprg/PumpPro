@@ -87,6 +87,7 @@ const OnBoardingTwo = () => {
           animation="flipInY"
           style={{flex: 1, justifyContent: 'center'}}>
           <CustomButton
+           restyleContainer = {{marginVertical:0,backgroundColor:'red'}}
             text={'Continue'}
             onPress={() => NavigationService.replace('OnBoardingThree')}
           />

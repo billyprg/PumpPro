@@ -2,12 +2,14 @@ import {
     AddPost, AudioScreen, EditProfile, VideoScreen, WelcomeScreen,Profile, Likes
 } from '../../containers'
 import HomeIcon from 'react-native-vector-icons/AntDesign'
-import ChatIcon from 'react-native-vector-icons/Ionicons'
+import SalesIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import ProfileIcon from 'react-native-vector-icons/Feather'
 
 import Colors from '../colors'
 import Home from '../../containers/Home/Home'
 import { BottomTab } from './BottomTab'
+import AddVendor from '../../containers/Vendor/AddVendor'
+import AllVendor from '../../containers/Vendor/AllVendor'
 export const AppStack = {
     Home: {
         name: 'Home',
@@ -32,17 +34,17 @@ export const homeTabConfig = {
         headerShown: false
     },
     Search: {
-        screenName: "Search",
+        screenName: "Sales",
         component: Home,
-        icon: <HomeIcon size={25} color={Colors.Yellow} name="search1" />,
-        iconGray: <HomeIcon size={25} color={Colors.White} name="search1" />,
+        icon: <SalesIcon size={25} color={Colors.Yellow} name="finance" />,
+        iconGray: <SalesIcon size={25} color={Colors.White} name="finance" />,
         headerShown: false
     },
     Chat: {
-        screenName: "Chat",
-        component: Home,
-        icon: <ChatIcon size={20} color={Colors.Yellow} name="chatbubble-outline" />,
-        iconGray: <ChatIcon size={25} color={Colors.White} name="chatbubble-outline" />,
+        screenName: "AddVendor",
+        component: AllVendor,
+        icon: <SalesIcon size={25} color={Colors.Yellow} name="finance" />,
+        iconGray: <SalesIcon size={25} color={Colors.White} name="finance" />,
         headerShown: false
     },
     Profile: {
