@@ -1,38 +1,66 @@
 import { Dimensions, StyleSheet, Text, View , Image} from 'react-native'
-import React,{useEffect} from 'react'
+import React,{Component, useEffect} from 'react'
 import Images from '../../config/images'
 import { NavigationService } from '../../config'
 import { AuthStack } from '../../config/navigationConfig/AuthStack'
+import { AppStack } from '../../config/navigationConfig/AppStack'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { connect, useDispatch } from 'react-redux'
+import { AuthAction } from '../../store/actions'
 
 const WIDTH= Dimensions.get('screen').width
-const Splash = () => {
 
-    useEffect(() => {
-        checkUser()
-    }, [])
-    
+class Splash extends Component {
 
-    checkUser = async () => {
-        // const isWelcomeScreenDisplayed = await AsyncStorage.getItem("onBoarding");
-        setTimeout(() => {
-          NavigationService.replace('OnBoarding')
-        }, 2000);
-    }
-    
+  componentDidMount() {
+      this.checkUser()
+  }
 
-  return (
-    <View style={styles.container}>
-    <Image source={Images.SplashGif} resizeMode='stretch' style={styles.image} />
-</View>
-  )
+  checkUser = async () => {
+      const isWelcomeScreenDisplayed = await AsyncStorage.getItem("onBoarding");
+      setTimeout(() => {
+          if (isWelcomeScreenDisplayed) {
+              AsyncStorage.getItem('user').then(user => {
+                console.log('user======>', user)
+                  if (user) {
+                      const parsedData = JSON.parse(user)
+                      this.props.SetUser(parsedData)
+                      // this.props.SignInSuccess(parsedData)
+                      NavigationService.replace(AppStack.HomeStack.name)
+                  } else {
+                      NavigationService.replace(AuthStack.Login.name)
+                  }
+              })
+          }
+          else {
+              NavigationService.replace(AuthStack.OnBoarding.name);
+          }
+      }, 3000);
+  }
+
+  render() {
+      return (
+          <View style={styles.container}>
+              <Image source={Images.SplashGif} style={styles.image} />
+          </View>
+      )
+  }
 }
 
-export default Splash
+function mapDispatchToProps(dispatch) {
+  return {
+      // SignInSuccess: (payload) => { dispatch(AuthAction.SignInSuccess(payload)) }
+      SetUser: (payload) => { dispatch(AuthAction.SetUser(payload)) }
+  }
+}
+
+
+
+export default connect(null, mapDispatchToProps)(Splash);
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        
         justifyContent: 'center',
         alignItems: 'center'
     },

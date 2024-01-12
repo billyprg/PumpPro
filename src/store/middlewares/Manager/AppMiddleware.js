@@ -1,6 +1,6 @@
-import { AppAction } from '../actions';
-import Store from '..';
-import { NavigationService, ApiCaller, Constants, showToast } from '../../config';
+import { AppAction } from '../../actions';
+import Store from '../..';
+import { NavigationService, ApiCaller, Constants, showToast } from '../../../config';
 import { put } from 'redux-saga/effects';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

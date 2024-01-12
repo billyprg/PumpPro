@@ -15,11 +15,17 @@ import {Images, NavigationService} from '../../config';
 import IntroCard from '../../components/IntroCard/IntroCard';
 import CustomButton from '../../components/Buttons/CustomButton';
 import * as Animatable from 'react-native-animatable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnBoardingThree = () => {
   const navigation = useNavigation();
 
   const [showButton, setShowButton] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.setItem("onBoarding", JSON.stringify(true));
+}, [])
+
 
   useEffect(() => {
     setTimeout(() => {

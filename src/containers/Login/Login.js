@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
 import React from 'react';
 import WrapperCom from '../../components/WrapperComp/WrapperCom';
 import {Colors, Fonts, Images, NavigationService} from '../../config';
@@ -7,7 +7,10 @@ import CustomInput from '../../components/Inputs/Input';
 import {useForm} from 'react-hook-form';
 import PasswordInput from '../../components/Inputs/PasswordInput';
 import CustomButton from '../../components/Buttons/CustomButton';
-import { AppStack } from '../../config/navigationConfig/AppStack';
+import {AppStack} from '../../config/navigationConfig/AppStack';
+import {useDispatch} from 'react-redux';
+import AuthAction from '../../store/actions/AuthAction';
+import { AuthStack } from '../../config/navigationConfig/AuthStack';
 
 const Login = () => {
   const {
@@ -15,6 +18,18 @@ const Login = () => {
     handleSubmit,
     formState: {errors},
   } = useForm({mode: 'all'});
+
+  const dispatch = useDispatch();
+
+  const onLogin = handleSubmit(values => {
+    console.log('values==>', values);
+    const data = {
+      // fcmToken: null,
+      // platform: 'App',
+      ...values,
+    };
+    dispatch(AuthAction.SignIn(data));
+  });
 
   return (
     <WrapperCom
@@ -52,7 +67,7 @@ const Login = () => {
             // rules={{
             //   required: 'Title is required',
             // }}
-            maxLength={20}
+            // maxLength={20}
           />
 
           <PasswordInput
@@ -79,9 +94,16 @@ const Login = () => {
 
           <CustomButton
             text={'Continue'}
-            restyleContainer = {{marginVertical: verticalScale(40)}}
-            onPress={() => NavigationService.replace(AppStack.HomeStack.name)}
+            restyleContainer={{marginTop: verticalScale(40)}}
+            onPress={onLogin}
           />
+
+          <View>
+            <Text style={styles.orText}>Or</Text>
+          </View>
+          <Pressable onPress={()=>NavigationService.navigate(AuthStack.Register.name)}>
+            <Text style={styles.registerText}>Register Now</Text>
+          </Pressable>
         </View>
       }
     />
@@ -91,10 +113,26 @@ const Login = () => {
 export default Login;
 
 const styles = StyleSheet.create({
-  heading:{
-    textAlign:'center',
-    fontFamily:Fonts.Poppins600,
-    fontSize: scale(20),
-    color: Colors.Black
-  }
+  heading: {
+    textAlign: 'center',
+    fontFamily: Fonts.Poppins600,
+    fontSize: scale(17),
+    color: Colors.Black,
+  },
+
+  orText: {
+    fontFamily: Fonts.Poppins700,
+    fontSize: scale(16),
+    color: Colors.Black,
+    textAlign: 'center',
+    marginTop: verticalScale(5),
+  },
+  registerText: {
+    fontFamily: Fonts.Poppins600,
+    fontSize: scale(14),
+    color: Colors.Primary,
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+    marginVertical: verticalScale(5),
+  },
 });

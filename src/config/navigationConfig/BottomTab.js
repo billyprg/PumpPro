@@ -6,8 +6,9 @@ import _ from 'lodash';
 import Colors from '../colors';
 import Fonts from '../fonts';
 import metrix from '../metrix';
-import { homeTabConfig } from './AppStack';
+import { bottomTabConfig, homeTabConfig } from './AppStack';
 import { Metrix } from '..';
+import { scale } from 'react-native-size-matters';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
@@ -21,8 +22,8 @@ export const BottomTab = () => {
                     backgroundColor: Colors.Primary,
                 },
             }}
-            initialRouteName={homeTabConfig.Home.screenName}>
-            {Object.entries(homeTabConfig).map((tab) => {
+            initialRouteName={bottomTabConfig.Home.screenName}>
+            {Object.entries(bottomTabConfig).map((tab) => {
                 return (
                     <BottomTabNavigation.Screen
                         key={tab[1].screenName}
@@ -34,7 +35,7 @@ export const BottomTab = () => {
                                 backgroundColor: Colors.Primary,
                                 height: Metrix.VerticalSize(70),
                                 borderColor:Colors.Secondary,
-                                borderWidth:1
+                                
 
                             },
                             tabBarLabel: (focus) => {
@@ -55,9 +56,10 @@ export const BottomTab = () => {
 
 const TabBarLabel = (props) => {
     const { tab, focus } = props;
+    console.log('tab-====>', tab)
     return (
-        <Text>
-            {tab.screenTitle}
+        <Text style={styles.tabBarLabel}>
+            {tab.screenName}
         </Text>
     );
 };
@@ -69,7 +71,7 @@ const TabBarIcon = (props) => {
     const TabUnfocused = tab.iconGray;
 
     return (
-        <View style={{ marginTop: 12 }} >
+        <View style={{ marginVertical:5 }} >
             {
                 <View>
                     {focus.focused ? (
@@ -112,10 +114,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     tabBarLabel: {
-        fontSize: metrix.FontMedium,
-        color: Colors.DarkGray,
-        fontFamily: Fonts['Roboto-Regular'],
+        fontSize: scale(11),
+        color: Colors.White,
+        fontFamily: Fonts.Poppins700,
         textAlign: 'center',
+        bottom:2
     },
     focusedTabBarLabel: {
         fontSize: metrix.FontMedium,
@@ -123,27 +126,11 @@ const styles = StyleSheet.create({
         fontFamily: Fonts['Roboto-Regular'],
         textAlign: 'center',
     },
-    countContainer: {
-        bottom: 10,
-        left: 14,
-        alignItems: 'center',
-        position: 'absolute',
-        backgroundColor: Colors.Primary,
-        height: 15,
-        width: 15,
-        borderRadius: 100,
-    },
-    countText: {
-        top: 3,
-        fontSize: 8,
-        color: Colors.Primary,
-        alignSelf: 'center',
-    },
     labelFocused: {
         position: "absolute",
         bottom: -10,
         alignSelf: "center",
-        marginTop: 5,
+        marginBottom: 2,
         height: 4,
         width: 4,
         borderRadius: 200,

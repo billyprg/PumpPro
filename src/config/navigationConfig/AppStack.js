@@ -10,6 +10,7 @@ import Home from '../../containers/Home/Home'
 import { BottomTab } from './BottomTab'
 import AddVendor from '../../containers/Vendor/AddVendor'
 import AllVendor from '../../containers/Vendor/AllVendor'
+import DrawerStack from './Manager/DrawerStack'
 export const AppStack = {
     Home: {
         name: 'Home',
@@ -22,10 +23,16 @@ export const AppStack = {
         component: BottomTab,
         key: 'HomeStack'
     }, 
+
+    DrawerStack: {
+        name: 'DrawerStack',
+        component: DrawerStack,
+        key: 'DrawerStack'
+    }, 
   
 }
 
-export const homeTabConfig = {
+export const bottomTabConfig = {
     Home: {
         screenName: "Home",
         component: Home,

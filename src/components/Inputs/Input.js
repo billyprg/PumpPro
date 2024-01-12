@@ -26,7 +26,7 @@ const CustomInput = forwardRef((props, ref) => {
   return (
     <>
       {props.upperText ? (
-        <View style={[{marginTop: verticalScale(25)}, props.RestyleUpperView]}>
+        <View style={[{marginTop: verticalScale(0)}, props.RestyleUpperView]}>
           <Text style={[styles.UpperText, props.restyleUpperText]}>
             {props.upperText}
           </Text>

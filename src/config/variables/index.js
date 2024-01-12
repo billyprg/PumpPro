@@ -2,7 +2,7 @@ import { Platform } from "react-native"
 
 
 //DEV URL
-var baseUrl = "https://jsonplaceholder.typicode.com/";
+export const baseUrl = "http://127.0.0.1:8000/api/";
 
 //UAT URL
 //var baseUrl = "";

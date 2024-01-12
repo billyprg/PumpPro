@@ -2,12 +2,13 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import BalanceCard from '../../components/Cards/BalanceCard/BalanceCard';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
-import {Colors, Fonts} from '../../config';
+import {Colors, Fonts, NavigationService} from '../../config';
 import InventoryCard from '../../components/Cards/InventoryCard/InventoryCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Icons from '../../config/icons';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import {GlobalStyle} from '../../constants/GlobalStyle';
+import { AppStack } from '../../config/navigationConfig/AppStack';
 
 const Home = () => {
   const inventoryData = [
@@ -38,6 +39,8 @@ const Home = () => {
     <View style={GlobalStyle.container}>
       <KeyboardAwareScrollView style={{flex: 1}}>
       <Text
+
+      onPress={()=>NavigationService.navigate('DrawerStack')}
             style={{
               color: Colors.Black,
               fontFamily: Fonts.Poppins600,

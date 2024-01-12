@@ -9,6 +9,7 @@ import {useForm} from 'react-hook-form';
 import {Colors} from '../../config';
 import CustomButton from '../../components/Buttons/CustomButton';
 import LinearGradient from 'react-native-linear-gradient';
+import BottomSheet from '../../components/RBSheet/RBSheet';
 
 const AddVendor = () => {
   const {
@@ -16,6 +17,40 @@ const AddVendor = () => {
     handleSubmit,
     formState: {errors},
   } = useForm({mode: 'all'});
+
+  const [addVendorSheet, showAddVendorSheet] = useState(false);
+
+  const BottomSheetData = [
+    {
+      title: 'Vendor Name',
+    },
+    {
+      title: 'Purchase',
+    },
+    {
+      title: 'Contact Person',
+    },
+
+    {
+      title: 'Account No.',
+    },
+  ];
+
+  const AddVendorBottomSheet = () => {
+    console.log('its working');
+    <BottomSheet
+      bottomSheetVisible={addVendorSheet}
+      onCloseReq={() => {
+        showAddVendorSheet(false);
+      }}
+      children={
+        <View style={GlobalStyle.padding}>
+          <Text style={{color:'black'}}> HOLÆ</Text>
+        </View>
+      }
+    />;
+  };
+
   return (
     <View style={GlobalStyle.container}>
       <KeyboardAwareScrollView style={{flex: 1}}>
@@ -66,10 +101,11 @@ const AddVendor = () => {
             />
 
             <CustomButton text={'ADD'} />
-
-           
           </View>
+          <AddVendorBottomSheet/>
         </View>
+
+
       </KeyboardAwareScrollView>
     </View>
   );
@@ -83,7 +119,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.White,
-    fontSize:scale(14),
-    
+    fontSize: scale(14),
   },
 });

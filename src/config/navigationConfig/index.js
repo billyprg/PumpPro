@@ -6,7 +6,7 @@ export const MainStackNavigator = () => {
     const MainStackNavigator = createNativeStackNavigator();
     return (
         <MainStackNavigator.Navigator
-            initialRouteName={AuthStack.Splash}
+            initialRouteName={AuthStack.Splash.name}
             screenOptions={{
                 headerShown: false
             }}>

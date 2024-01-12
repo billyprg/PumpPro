@@ -20,7 +20,7 @@ const PasswordInput = forwardRef((props, ref) => {
 
     <>
     {props.uppertrue ? (
-      <View style={{marginTop: verticalScale(25)}}>
+      <View style={{marginTop: verticalScale(20)}}>
         <Text style={[styles.UpperText, props.restyleUpperText]}>
           {props.upperText}
         </Text>
@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     color: Colors.Black,
     // fontFamily: Font.Gilroy500,
     fontSize: scale(1),
-    paddingHorizontal: moderateScale(10),
   },
   UpperText:{
     // fontFamily: Font.Poppins500,
