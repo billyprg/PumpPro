@@ -5,7 +5,7 @@ import {
     LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILURE,
     SET_USER, REMOVE_USER,
     LOADER_TRUE, LOADER_FALSE, SIGN_UP, SIGN_UP_SUCCESS, SIGNIN_UP_FAILURE, SEND_OTP, SEND_OTP_SUCCESS, SEND_OTP_FAILURE, VERIFY_OTP, VERIFY_OTP_SUCCESS, VERIFY_OTP_FAILURE, RESET_PASSWORD, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILURE, 
-    CHANGE_PASSWORD, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE,
+    CHANGE_PASSWORD, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE, COMPLETE_PROFILE_SUCCESS, COMPLETE_PROFILE_FAILURE, COMPLETE_PROFILE,
 } from '../constants';
 
 const initialState = {
@@ -49,6 +49,28 @@ export default function AuthReducer(state = initialState, action) {
             }
             break;
         case SIGNIN_UP_FAILURE:
+            state = {
+                ...state,
+                loader: false
+            }
+            break;
+
+
+
+        case COMPLETE_PROFILE:
+            state = {
+                ...state,
+                loader: true
+            }
+            break;
+        case COMPLETE_PROFILE_SUCCESS:
+            state = {
+                ...state,
+                user: action.payload,
+                loader: false
+            }
+            break;
+        case COMPLETE_PROFILE_FAILURE:
             state = {
                 ...state,
                 loader: false

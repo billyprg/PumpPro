@@ -1,6 +1,8 @@
 export class AuthRoutes {
-    static LOGIN = `auth/login`;
-    static REGISTE = 'auth/register-store';
+    static LOGIN = 'auth/login';
+    static REGISTER = 'auth/register-store';
+    static LOGOUT = 'auth/logout';
+    static COMPLETE_PROFILE = 'auth/complete-profile-store'
    
   }
   

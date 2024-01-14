@@ -21,7 +21,7 @@ import {AuthStack} from '../../config/navigationConfig/AuthStack';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {GlobalStyle} from '../../constants/GlobalStyle';
 
-const Register = () => {
+const CompleteProfile = ({route}) => {
   const {
     control,
     handleSubmit,
@@ -30,15 +30,14 @@ const Register = () => {
 
   const dispatch = useDispatch();
 
-  const onLogin = handleSubmit(values => {
-    delete values.confirm_password;
+  const userData = route?.params?.data;
+
+  const onCompleteProfile = handleSubmit(values => {
     console.log('values==>', values);
     const data = {
-      // fcmToken: null,
-      // platform: 'App',
       ...values,
     };
-    dispatch(AuthAction.SignUp(data));
+    dispatch(AuthAction.CompleteProfile(data));
   });
 
   return (
@@ -58,82 +57,82 @@ const Register = () => {
           }
           contentView={
             <View style={{backgroundColor: 'white', marginTop: '10%'}}>
-              <Text style={styles.heading}>Register to continue</Text>
-           
+              <Text style={styles.heading}>Complete Your Profile</Text>
+
               <CustomInput
                 boxStyle={{
                   marginTop: verticalScale(20),
                   borderWidth: 1,
                   borderColor: Colors.Primary,
                 }}
-                placeholder="Owner Name"
+                placeholder="Pump Name"
                 // uppertrue
                 // upperText={'Email'}
                 fontSize={scale(16)}
                 size={scale(24)}
                 control={control}
-                name="name"
+                name="company_name"
               />
-            
+
               <CustomInput
                 boxStyle={{
                   marginTop: verticalScale(20),
                   borderWidth: 1,
                   borderColor: Colors.Primary,
                 }}
-                placeholder="Email"
-                // uppertrue
-                // upperText={'Email'}
+                placeholder="Acc No"
                 fontSize={scale(16)}
                 size={scale(24)}
                 control={control}
-                name="email"
+                name="account"
               />
 
-              <PasswordInput
-                restyleText={{marginLeft: moderateScale(-15)}}
+              <CustomInput
                 boxStyle={{
-                  marginTop: verticalScale(30),
+                  marginTop: verticalScale(20),
                   borderWidth: 1,
                   borderColor: Colors.Primary,
                 }}
-                placeholder="Password"
-                // uppertrue
-                // upperText={'Email'}
+                placeholder="Total Employees"
                 fontSize={scale(16)}
                 size={scale(24)}
                 control={control}
-                name="password"
-                // rules={{
-                //   required: 'Title is required',
-                // }}
-                maxLength={20}
+                name="totalEmployees"
+                keyboardType={'numeric'}
               />
 
-              <PasswordInput
-                restyleText={{marginLeft: moderateScale(-15)}}
+              <CustomInput
                 boxStyle={{
-                  marginTop: verticalScale(30),
+                  marginTop: verticalScale(20),
                   borderWidth: 1,
                   borderColor: Colors.Primary,
                 }}
-                placeholder="Confirm Password"
-                // uppertrue
-                // upperText={'Email'}
+                placeholder="Total Employees Salary in Rs"
                 fontSize={scale(16)}
                 size={scale(24)}
                 control={control}
-                name="confirm_password"
-                // rules={{
-                //   required: 'Title is required',
-                // }}
-                maxLength={20}
+                name="employee_salary"
+                keyboardType={'numeric'}
+              />
+
+              <CustomInput
+                boxStyle={{
+                  marginTop: verticalScale(20),
+                  borderWidth: 1,
+                  borderColor: Colors.Primary,
+                }}
+                placeholder="Total Expense"
+                fontSize={scale(16)}
+                size={scale(24)}
+                control={control}
+                name="expense"
+                keyboardType={'numeric'}
               />
 
               <CustomButton
                 text={'Continue'}
                 restyleContainer={{marginTop: verticalScale(40)}}
-                onPress={onLogin}
+                onPress={onCompleteProfile}
               />
             </View>
           }
@@ -143,7 +142,7 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default CompleteProfile;
 
 const styles = StyleSheet.create({
   heading: {

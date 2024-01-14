@@ -3,7 +3,7 @@ import {
     ADD_POST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
     GET_POSTS, GET_POSTS_SUCCESS, GET_POSTS_FAILURE,
     LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILURE,
-    LOADER_TRUE, LOADER_FALSE,
+    LOADER_TRUE, LOADER_FALSE, COMPLETE_PROFILE, COMPLETE_PROFILE_SUCCESS, COMPLETE_PROFILE_FAILURE,
 } from '../../constants';
 
 const initialState = {
@@ -15,25 +15,6 @@ const initialState = {
 export default function AdminAppReducer(state = initialState, action) {
     switch (action.type) {
 
-        case SIGNIN:
-            state = {
-                ...state,
-                loader: true
-            }
-            break;
-        case SIGNIN_SUCCESS:
-            state = {
-                ...state,
-                user: action.payload,
-                loader: false
-            }
-            break;
-        case SIGNIN_FAILURE:
-            state = {
-                ...state,
-                loader: false
-            }
-            break;
 
         case LOGOUT:
             state = {

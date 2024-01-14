@@ -1,7 +1,7 @@
 import {
     SIGNIN, SIGNIN_SUCCESS, SIGNIN_FAILURE,
     LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILURE,
-    LOADER_FALSE, LOADER_TRUE, SIGN_UP, SIGN_UP_SUCCESS, SIGNIN_UP_FAILURE, SET_USER, 
+    LOADER_FALSE, LOADER_TRUE,  SET_USER, SIGNUP, SIGNUP_FAILURE, SIGNUP_SUCCESS, COMPLETE_PROFILE_SUCCESS, COMPLETE_PROFILE_FAILURE, COMPLETE_PROFILE, 
 } from '../constants'
 
 
@@ -35,19 +35,19 @@ export default class AuthAction {
 
     static SignUp(payload) {
         return {
-            type: SIGN_UP,
+            type: SIGNUP,
             payload
         }
     }
     static SignUpSuccess(payload) {
         return {
-            type: SIGN_UP_SUCCESS,
+            type: SIGNUP_SUCCESS,
             payload
         }
     }
-    static SignUpFailure(payload) {
+    static SignUpFailure() {
         return {
-            type: SIGNIN_UP_FAILURE
+            type: SIGNUP_FAILURE
         }
     }
 
@@ -59,11 +59,10 @@ export default class AuthAction {
             payload
         }
     }
-    static Logout(payload,cb) {
+    static Logout(payload) {
         return {
             type: LOGOUT,
             payload,
-            cb
         }
     }
     static LogoutSuccess() {
@@ -77,7 +76,25 @@ export default class AuthAction {
         }
     }
     
-  
+    static CompleteProfile(payload) {
+        return {
+            type: COMPLETE_PROFILE,
+            payload
+        }
+    }
+    static CompleteProfileSuccess(payload) {
+        return {
+            type: COMPLETE_PROFILE_SUCCESS,
+            payload
+        }
+    }
+
+    static CompleteProfileFailure(payload) {
+        return {
+            type: COMPLETE_PROFILE_FAILURE,
+            payload
+        }
+    }
 
     static LoaderTrue() {
         return {

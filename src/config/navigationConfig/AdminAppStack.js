@@ -8,11 +8,11 @@ import InventoryIcon from 'react-native-vector-icons/FontAwesome6'
 
 
 import Colors from '../colors'
-import AddVendor from '../../containers/Vendor/AddVendor'
 import AllVendor from '../../containers/Vendor/AllVendor'
 import AdminHome from '../../containers/Admin/AdminHome/AdminHome'
 import { AdminBottomTab } from './AdminBottomTab'
-import AdminMore from '../../containers/Admin/AdminMore/AdminMore'
+import Expenses from '../../containers/Expenses/Expenses'
+import More from '../../containers/More/More'
 
 export const AdminAppStack = {
     Home: {
@@ -29,9 +29,16 @@ export const AdminAppStack = {
 
     More: {
         name: 'More',
-        component: AdminMore,
-        key: 'AdminMore',
+        component: More,
+        key: 'More',
     },
+
+    Expenses: {
+        name: 'Expenses',
+        component: Expenses,
+        key: 'Expenses',
+    },
+
 
 
   
@@ -61,7 +68,7 @@ export const bottomTabConfig = {
     },
     More: {
         screenName: "More",
-        component: AdminMore,
+        component: More,
         icon: <MoreIcon size={25} color={Colors.Yellow} name="menu" />,
         iconGray: <MoreIcon size={25} color={Colors.White} name="menu" />,
         headerShown: false

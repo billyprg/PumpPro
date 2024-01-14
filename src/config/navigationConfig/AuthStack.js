@@ -1,3 +1,4 @@
+import CompleteProfile from "../../containers/CompleteProfile/CompleteProfile";
 import Login from "../../containers/Login/Login";
 import OnBoarding from "../../containers/OnBoarding/OnBoarding";
 import OnBoardingThree from "../../containers/OnBoarding/OnBoardingThree";
@@ -43,6 +44,13 @@ export const AuthStack = {
         name: 'Register',
         component: Register,
         key: 'Register',
+    },
+
+    CompleteProfile :
+    {
+        name: 'CompleteProfile',
+        component: CompleteProfile,
+        key: 'CompleteProfile',
     },
   
 }

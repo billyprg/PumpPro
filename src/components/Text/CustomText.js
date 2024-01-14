@@ -40,7 +40,7 @@ function LightText({
 
 function BoldText({
     fontFamily = Fonts.Poppins700,
-    fontSize = scale(18),
+    fontSize = scale(14),
     color = Colors.Black,
     textAlign = 'center',
     textDecorationLine = 'none',
@@ -72,7 +72,7 @@ function BoldText({
 
 function HeadingText({
     fontFamily = Fonts.Poppins700,
-    fontSize = scale(18),
+    fontSize = scale(20),
     color = Colors.Black,
     textAlign = 'center',
     textDecorationLine = 'none',

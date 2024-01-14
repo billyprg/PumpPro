@@ -7,18 +7,29 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import {Colors, Fonts, NavigationService} from '../../../config';
-import {GlobalStyle} from '../../../constants/GlobalStyle';
+import {Colors, Fonts, NavigationService} from '../../config';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
-import ScreenNameHeader from '../../../components/Headers/ScreenNameHeader/ScreenNameHeader';
-import Icons from '../../../config/icons';
+import Icons from '../../config/icons';
+import { AdminAppStack } from '../../config/navigationConfig/AdminAppStack';
+import { GlobalStyle } from '../../constants/GlobalStyle';
+import ScreenNameHeader from '../../components/Headers/ScreenNameHeader/ScreenNameHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { AuthAction } from '../../store/actions';
 
-const AdminMore = () => {
+const More = () => {
+
+  const user = useSelector(state => state.AuthReducer.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = () =>{
+    console.log('user==>', user[0].plainTextToken);
+    dispatch(AuthAction.Logout(user[0].plainTextToken))
+  }
   const moreData = [
     {
       id: 1,
       screenName: 'Expenses',
-      onPress: () => NavigationService.navigate('bla'),
+      onPress: () => NavigationService.navigate(AdminAppStack.Expenses.name),
     },
     {
       id: 2,
@@ -29,13 +40,13 @@ const AdminMore = () => {
     {
       id: 3,
       screenName: 'Logout',
-      onPress: () => NavigationService.navigate('bla'),
+      onPress: () => handleLogout()
     },
   ];
 
   const renderItem = ({item}) => {
     return (
-      <TouchableOpacity style={styles.dataContainer}>
+      <TouchableOpacity onPress={item?.onPress} style={styles.dataContainer}>
         <Text
           style={[
             styles.screenName,
@@ -71,7 +82,7 @@ const AdminMore = () => {
   );
 };
 
-export default AdminMore;
+export default More;
 
 const styles = StyleSheet.create({
   dataContainer: {
