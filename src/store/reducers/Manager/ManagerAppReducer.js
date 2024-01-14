@@ -4,7 +4,7 @@ import {
     GET_POSTS, GET_POSTS_SUCCESS, GET_POSTS_FAILURE,
     LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILURE,
     LOADER_TRUE, LOADER_FALSE,
-} from '../constants';
+} from '../../constants';
 
 const initialState = {
     user: {},
@@ -12,7 +12,7 @@ const initialState = {
     posts: []
 }
 
-export default function AppReducer(state = initialState, action) {
+export default function ManagerAppReducer(state = initialState, action) {
     switch (action.type) {
 
         case SIGNIN:

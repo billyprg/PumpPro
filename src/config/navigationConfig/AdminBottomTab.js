@@ -6,15 +6,15 @@ import _ from 'lodash';
 import Colors from '../colors';
 import Fonts from '../fonts';
 import metrix from '../metrix';
-import { bottomTabConfig, homeTabConfig } from './AppStack';
 import { Metrix } from '..';
 import { scale } from 'react-native-size-matters';
+import { bottomTabConfig } from './AdminAppStack';
 
 const BottomTabNavigation = createBottomTabNavigator();
 
 // make homeTab a functional component where I can import hooks
 
-export const BottomTab = () => {
+export const AdminBottomTab = () => {
     return (
         <BottomTabNavigation.Navigator
             screenOptions={{
@@ -22,7 +22,7 @@ export const BottomTab = () => {
                     backgroundColor: Colors.Primary,
                 },
             }}
-            initialRouteName={bottomTabConfig.Home.screenName}>
+            initialRouteName={bottomTabConfig.Home.component}>
             {Object.entries(bottomTabConfig).map((tab) => {
                 return (
                     <BottomTabNavigation.Screen

@@ -7,7 +7,7 @@ import CustomInput from '../../components/Inputs/Input';
 import {useForm} from 'react-hook-form';
 import PasswordInput from '../../components/Inputs/PasswordInput';
 import CustomButton from '../../components/Buttons/CustomButton';
-import {AppStack} from '../../config/navigationConfig/AppStack';
+import {AppStack} from '../../config/navigationConfig/ManagerAppStack';
 import {useDispatch} from 'react-redux';
 import AuthAction from '../../store/actions/AuthAction';
 import { AuthStack } from '../../config/navigationConfig/AuthStack';

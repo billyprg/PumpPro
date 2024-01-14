@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
-import AppReducer from './AppReducer';
 import AuthReducer from './AuthReducer';
+import AdminAppReducer from './Admin/AdminAppReducer';
+import ManagerAppReducer from './Manager/ManagerAppReducer';
 
 const RootReducer = combineReducers({
     AuthReducer,
-    AppReducer
+    AdminAppReducer,
+    ManagerAppReducer
 });
 
 export default RootReducer;

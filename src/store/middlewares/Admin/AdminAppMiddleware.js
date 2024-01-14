@@ -3,12 +3,11 @@ import {NavigationService, ApiCaller, showToast} from '../../config';
 import {put} from 'redux-saga/effects';
 import {AuthRoutes} from '../../config/Constants';
 import {baseUrl} from '../../config/variables';
-import {AppStack, ManagerAppStack} from '../../config/navigationConfig/ManagerAppStack';
+import {AppStack} from '../../config/navigationConfig/AppStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AdminAppStack } from '../../config/navigationConfig/AdminAppStack';
 // import { AppStack } from '../../config/navigationConfig/AppStack';
 
-export default class AuthMiddleware {
+export default class AdminAppMiddleware {
   static *SignIn({payload}) {
     try {
       let response = yield ApiCaller.Post(AuthRoutes.LOGIN, payload);
@@ -18,12 +17,7 @@ export default class AuthMiddleware {
       if (response?.status === 200) {
         yield put(AuthAction.SignInSuccess(response?.data));
         yield put(AuthAction.SetUser(response?.data?.data));
-        console.log('response?.data?.data?.user?.role_id', response?.data?.data?.user?.role_id)
-        if (response?.data?.data?.user?.role_id == 1) {
-          NavigationService.replace(AdminAppStack.BottomStack.name)
-        } else {
-          NavigationService.replace(ManagerAppStack.BottomStack.name)
-        }
+        NavigationService.replace(AppStack.HomeStack.name);
       } else {
         yield put(AuthAction.SignInFailure());
         showToast('error', `${response?.data?.error?.message}`);

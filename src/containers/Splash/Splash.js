@@ -3,10 +3,11 @@ import React,{Component, useEffect} from 'react'
 import Images from '../../config/images'
 import { NavigationService } from '../../config'
 import { AuthStack } from '../../config/navigationConfig/AuthStack'
-import { AppStack } from '../../config/navigationConfig/AppStack'
+import { AppStack, ManagerAppStack } from '../../config/navigationConfig/ManagerAppStack'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { connect, useDispatch } from 'react-redux'
 import { AuthAction } from '../../store/actions'
+import { AdminAppStack } from '../../config/navigationConfig/AdminAppStack'
 
 const WIDTH= Dimensions.get('screen').width
 
@@ -25,8 +26,13 @@ class Splash extends Component {
                   if (user) {
                       const parsedData = JSON.parse(user)
                       this.props.SetUser(parsedData)
+                      if (user?.user?.role_id == 1) {
+                        NavigationService.replace(AdminAppStack.BottomStack.name)
+                      } else {
+                        NavigationService.replace(ManagerAppStack.BottomStack.name)
+                      }
                       // this.props.SignInSuccess(parsedData)
-                      NavigationService.replace(AppStack.HomeStack.name)
+                    //   NavigationService.replace(AppStack.HomeStack.name)
                   } else {
                       NavigationService.replace(AuthStack.Login.name)
                   }

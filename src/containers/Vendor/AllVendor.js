@@ -5,12 +5,13 @@ import CustomText from '../../components/Text/CustomText';
 import VendorCard from '../../components/Cards/VendorCard/VendorCard';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {Colors, Icons, Metrix, NavigationService} from '../../config';
-import {AppStack} from '../../config/navigationConfig/AppStack';
+import {AppStack} from '../../config/navigationConfig/ManagerAppStack';
 import BottomSheet from '../../components/RBSheet/RBSheet';
 import CustomInput from '../../components/Inputs/Input';
 import {useForm} from 'react-hook-form';
 import styles from './style';
 import CustomButton from '../../components/Buttons/CustomButton';
+import ScreenNameHeader from '../../components/Headers/ScreenNameHeader/ScreenNameHeader';
 
 const AllVendor = () => {
   const {
@@ -45,19 +46,16 @@ const AllVendor = () => {
         bottomSheetContainerStyle={{backgroundColor: Colors.Primary}}
         children={
           <View style={styles.container}>
-
-           <View>
-           <Icons.Entypo
-              name="cross"
-              size={Metrix.VerticalSize(25)}
-              color={Colors.Primary}
-              style={styles.crossIcon}
-              onPress={() => showAddVendorSheet(false)}
-            />
-           </View>
-         
-     
-          
+            <View style={{backgroundColor:'red',bottom:10,right:-10}}>
+              <Icons.Entypo
+                name="cross"
+                size={Metrix.VerticalSize(25)}
+                color={Colors.Primary}
+                style={styles.crossIcon}
+                onPress={() => showAddVendorSheet(false)}
+              />
+            </View>
+            <View style={{height:15}}/>
             <CustomInput
               boxStyle={styles.inputStyle}
               placeholder="Vendor Name"
@@ -115,8 +113,8 @@ const AllVendor = () => {
   };
   return (
     <View style={GlobalStyle.container}>
+      <ScreenNameHeader backArrow={true} title={'All Vendors'}/>
       <View style={GlobalStyle.paddingFlex}>
-        <CustomText.HeadingText textAlign={'left'} text={'All Vendors'} />
 
         <Pressable
           onPress={handleAddVendor}

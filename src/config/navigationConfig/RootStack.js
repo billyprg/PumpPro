@@ -1,5 +1,6 @@
 import { AuthStack } from "./AuthStack"
-import { AppStack } from "./AppStack"
+import { ManagerAppStack } from "./ManagerAppStack"
+import { AdminAppStack } from "./AdminAppStack"
 export const RootStack = {
-    ...AuthStack , ...AppStack
+    ...AuthStack , ...ManagerAppStack, ...AdminAppStack
 }

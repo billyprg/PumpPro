@@ -1,7 +1,10 @@
 import AuthMiddleware from './AuthMiddleware';
-import AppMiddleware from './Manager/AppMiddleware';
+import ManagerAppMiddleware from './Manager/ManagerAppMiddleware'
+import AdminAppMiddleware from './Admin/AdminAppMiddleware'
 
 export {
     AuthMiddleware,
-    AppMiddleware,
+    ManagerAppMiddleware,
+    AdminAppMiddleware
+    
 }

@@ -1,22 +1,18 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import BalanceCard from '../../components/Cards/BalanceCard/BalanceCard';
+import BalanceCard from '../../../components/Cards/BalanceCard/BalanceCard';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
-import {Colors, Fonts, NavigationService} from '../../config';
-import InventoryCard from '../../components/Cards/InventoryCard/InventoryCard';
+import {Colors, Fonts, NavigationService} from '../../../config';
+import InventoryCard from '../../../components/Cards/InventoryCard/InventoryCard';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import Icons from '../../config/icons';
+import Icons from '../../../config/icons';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import {GlobalStyle} from '../../constants/GlobalStyle';
-import { AppStack } from '../../config/navigationConfig/AppStack';
+import {GlobalStyle} from '../../../constants/GlobalStyle';
+import { AppStack } from '../../../config/navigationConfig/ManagerAppStack';
+import ScreenNameHeader from '../../../components/Headers/ScreenNameHeader/ScreenNameHeader';
 
-const Home = () => {
-  const inventoryData = [
-    {id: 1, type: 'Petrol', quantity: '17,000 ltr'},
-    {id: 2, type: 'High-Octane', quantity: '17,000 ltr'},
-    {id: 3, type: 'CNG', quantity: '1.5 ltr'},
-  ];
-
+const AdminHome = () => {
+  
   const purchaseData = [
     {id: 1, vendor: 'PSO', bought: '17,000 ltr'},
     {id: 2, vendor: 'Shell', bought: '17,000 ltr'},
@@ -38,18 +34,7 @@ const Home = () => {
   return (
     <View style={GlobalStyle.container}>
       <KeyboardAwareScrollView style={{flex: 1}}>
-      <Text
-
-      onPress={()=>NavigationService.navigate('DrawerStack')}
-            style={{
-              color: Colors.Black,
-              fontFamily: Fonts.Poppins600,
-              fontSize: scale(30),
-              alignSelf: 'center',
-            
-            }}>
-            Dashboard
-          </Text>
+        <ScreenNameHeader title={'Dashboard'}/>
         <View
           style={{
             paddingHorizontal: moderateScale(20),
@@ -58,27 +43,13 @@ const Home = () => {
          
           <BalanceCard />
 
-          <View style={styles.inventoryContainer}>
+          <Pressable style={styles.inventoryContainer}>
             <View style={styles.inventoryTitle}>
-              <Text style={styles.headingText}>Current Inventory</Text>
+              <Text style={styles.headingText}>View Current Inventory</Text>
             </View>
 
-            <View style={{alignItems: 'center', padding: moderateScale(10)}}>
-              <FlatList
-                ItemSeparatorComponent={() => (
-                  <View
-                    style={{
-                      margin: 10,
-                      backgroundColor: Colors.Primary,
-                    }}
-                  />
-                )}
-                horizontal
-                data={inventoryData}
-                renderItem={({item}) => <InventoryCard item={item} />}
-              />
-            </View>
-          </View>
+     
+          </Pressable>
 
           <View style={styles.purchasesMainView}>
             <View style={styles.purchasesTitle}>
@@ -117,7 +88,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AdminHome;
 
 const styles = StyleSheet.create({
   inventoryContainer: {
@@ -131,7 +102,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Primary,
     justifyContent: 'center',
     paddingVertical: verticalScale(10),
-    paddingHorizontal: moderateScale(15),
+    paddingHorizontal: moderateScale(10),
+    alignItems: 'center'
   },
   headingText: {
     fontFamily: Fonts.Poppins600,

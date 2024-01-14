@@ -1,7 +1,11 @@
 import AuthAction from './AuthAction';
-import AppAction from './AppAction';
+import ManagerAppAction from './Manager/ManagerAppAction';
+import AdminAppAction from './Admin/AdminAppAction';
+
 
 export {
     AuthAction,
-    AppAction,
+    ManagerAppAction,
+    AdminAppAction
+    
 }
