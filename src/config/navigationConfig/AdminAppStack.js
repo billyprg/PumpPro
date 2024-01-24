@@ -13,6 +13,7 @@ import AdminHome from '../../containers/Admin/AdminHome/AdminHome'
 import { AdminBottomTab } from './AdminBottomTab'
 import Expenses from '../../containers/Expenses/Expenses'
 import More from '../../containers/More/More'
+import Inventory from '../../containers/Inventory/Inventory'
 
 export const AdminAppStack = {
     Home: {
@@ -61,7 +62,7 @@ export const bottomTabConfig = {
     },
     Vendor: {
         screenName: "Inventory",
-        component: AllVendor,
+        component: Inventory,
         icon: <InventoryIcon size={24} color={Colors.Yellow} name="gas-pump" />,
         iconGray: <InventoryIcon size={24} color={Colors.White} name="gas-pump" />,
         headerShown: false

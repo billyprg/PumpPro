@@ -3,13 +3,16 @@ import {
     ADD_POST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
     GET_POSTS, GET_POSTS_SUCCESS, GET_POSTS_FAILURE,
     LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAILURE,
-    LOADER_TRUE, LOADER_FALSE, COMPLETE_PROFILE, COMPLETE_PROFILE_SUCCESS, COMPLETE_PROFILE_FAILURE,
+    LOADER_TRUE, LOADER_FALSE, COMPLETE_PROFILE, COMPLETE_PROFILE_SUCCESS, COMPLETE_PROFILE_FAILURE, CURRENT_DATE, SHIFT_ONE_STATUS, SHIFT_TWO_STATUS,
 } from '../../constants';
 
 const initialState = {
     user: {},
     loader: false,
-    posts: []
+    posts: [],
+    shiftOne : false,
+    shiftTwo: false,
+    currDate : ''
 }
 
 export default function AdminAppReducer(state = initialState, action) {
@@ -36,47 +39,29 @@ export default function AdminAppReducer(state = initialState, action) {
             }
             break;
 
-        case ADD_POST:
+        
+        case SHIFT_ONE_STATUS:
             state = {
                 ...state,
-                loader: true
+                shiftOne: action.payload
             }
             break;
-        case ADD_POST_SUCCESS:
-            // state.posts.unshift(action.payload)
-            state = {
-                ...state,
-                posts: [action.payload, ...state.posts],
-                loader: false
-            }
-            break;
-        case ADD_POST_FAILURE:
-            state = {
-                ...state,
-                loader: false
-            }
-            break;
+        
 
-        case GET_POSTS:
+        case SHIFT_TWO_STATUS:
             state = {
                 ...state,
-                loader: true
+                shiftTwo: action.payload
             }
             break;
-        case GET_POSTS_SUCCESS:
+                    
+        case CURRENT_DATE:
             state = {
                 ...state,
-                posts: action.payload,
-                loader: false
+                currDate: action.payload
             }
             break;
-        case GET_POSTS_FAILURE:
-            state = {
-                ...state,
-                loader: false
-            }
-            break;
-
+                
 
         case LOADER_TRUE:
             state = {
