@@ -27,9 +27,12 @@ export default class AuthMiddleware {
           response?.data?.data?.user?.role_id,
         );
         if (response?.data?.data?.user?.role_id == 1) {
-          NavigationService.replace(AdminAppStack.BottomStack.name);
+          console.log('fitrst')
+          // NavigationService.replace(AdminAppStack.BottomStack.name);
+          NavigationService.replace(ManagerAppStack.ManagerBottomTab.name);
         } else {
-          NavigationService.replace(ManagerAppStack.BottomStack.name);
+          console.log('second')
+          NavigationService.replace(ManagerAppStack.ManagerBottomTab.name);
         }
       } else {
         yield put(AuthAction.SignInFailure());
@@ -95,14 +98,14 @@ export default class AuthMiddleware {
     }
   }
 
-  static *Logout({payload}) {
-    console.log('payload', payload);
+  static *Logout({plainTextToken}) {
+    console.log('plainTextToken', plainTextToken);
     try {
       let response = yield ApiCaller.Post(
         AuthRoutes.LOGOUT,
-        {payload},
+        {plainTextToken},
         {
-          payload,
+          plainTextToken,
         },
       );
       console.log('response', response);

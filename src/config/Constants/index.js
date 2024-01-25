@@ -6,7 +6,14 @@ export class AuthRoutes {
    
   }
   
-  export class AppRoutes {
+  export class AdminAppRoutes {
    
   }
+
+
+  export class ManagerAppRoutes {
+   static ADD_VENDOR = 'auth/supplier/store';
+   static GET_VENDOR = 'auth/supplier';
+  }
+  
   

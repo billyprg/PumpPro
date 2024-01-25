@@ -1,3 +1,5 @@
+import { ADD_VENDOR, ADD_VENDOR_FAILURE, ADD_VENDOR_SUCCESS, GET_VENDOR, GET_VENDOR_FAILURE, GET_VENDOR_SUCCESS } from "../../constants";
+
 export default class ManagerAppAction {
 
     static SetUser(payload) {
@@ -7,51 +9,46 @@ export default class ManagerAppAction {
         };
       }
 
-    static SignIn(payload) {
-        console.log('araha')
+      static AddVendor(payload,cb) {
         return {
-            type: SIGNIN,
-            payload
+            type: ADD_VENDOR,
+            payload,
+            cb
         }
     }
-    static SignInSuccess(payload) {
+    static AddVendorSuccess() {
         return {
-            type: SIGNIN_SUCCESS,
-            payload
+            type: ADD_VENDOR_SUCCESS
         }
     }
-    static SignInFailure(payload) {
+    static AddVendorFailure() {
         return {
-            type: SIGNIN_FAILURE
-        }
-    }
-
-    static SignUp(payload) {
-        return {
-            type: SIGN_UP,
-            payload
-        }
-    }
-    static SignUpSuccess(payload) {
-        return {
-            type: SIGN_UP_SUCCESS,
-            payload
-        }
-    }
-    static SignUpFailure(payload) {
-        return {
-            type: SIGNIN_UP_FAILURE
+            type: ADD_VENDOR_FAILURE
         }
     }
 
-  
 
-    static SetUser(payload) {
+    static GetVendor(payload) {
         return {
-            type: SET_USER,
+            type: GET_VENDOR,
             payload
         }
     }
+    static GetVendorSuccess(payload) {
+        return {
+            type: GET_VENDOR_SUCCESS,
+            payload
+        }
+    }
+    static GetVendorFailure() {
+        return {
+            type: GET_VENDOR_FAILURE
+        }
+    }
+
+
+   
+
     static Logout(payload,cb) {
         return {
             type: LOGOUT,

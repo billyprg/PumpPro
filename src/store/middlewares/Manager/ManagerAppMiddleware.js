@@ -1,34 +1,62 @@
-import {AuthAction} from '../actions';
-import {NavigationService, ApiCaller, showToast} from '../../config';
+
 import {put} from 'redux-saga/effects';
-import {AuthRoutes} from '../../config/Constants';
-import {baseUrl} from '../../config/variables';
-import {AppStack} from '../../config/navigationConfig/AppStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ManagerAppRoutes } from '../../../config/Constants';
+import { ManagerAppAction } from '../../actions';
+import { ApiCaller, showToast } from '../../../config';
 // import { AppStack } from '../../config/navigationConfig/AppStack';
 
 export default class ManagerAppMiddleware {
-  static *SignIn({payload}) {
+  static *AddVendor({payload,cb}) {
+    const {token} = payload;
+    
     try {
-      let response = yield ApiCaller.Post(AuthRoutes.LOGIN, payload);
-
-      console.log('response', response?.data?.data);
+      let response = yield ApiCaller.Post(ManagerAppRoutes.ADD_VENDOR, payload,{
+        Authorization: `Bearer ${token}`
+      });
+      console.log('token====>', token)
+      console.log('response====>',response );
 
       if (response?.status === 200) {
-        yield put(AuthAction.SignInSuccess(response?.data));
-        yield put(AuthAction.SetUser(response?.data?.data));
-        NavigationService.replace(AppStack.HomeStack.name);
+        yield put(ManagerAppAction.AddVendorSuccess());
+        cb && cb();
       } else {
-        yield put(AuthAction.SignInFailure());
+        yield put(ManagerAppAction.AddVendorFailure());
         showToast('error', `${response?.data?.error?.message}`);
       }
     } catch (err) {
       console.log(err);
-      yield put(AuthAction.SignInFailure());
+      yield put(ManagerAppAction.AddVendorFailure());
       console.log(`%c${err.name}`, "color: red", ' => ', err)
       showToast("error", `${err?.data?.error?.message}`)
     }
   }
+
+  static *GetVendor({payload}) {
+    const {token} = payload;
+    console.log('token yeh hai=====>>', token)
+    try {
+      let response = yield ApiCaller.Get(ManagerAppRoutes.GET_VENDOR,{
+        Authorization: `Bearer ${token}`
+      });
+      console.log('token====>', token)
+      console.log('response====>',response?.status);
+
+      if (response?.status === 200) {
+        console.log('response====+>', response)
+        yield put(ManagerAppAction.GetVendorSuccess(response?.data));
+      } else {
+        yield put(ManagerAppAction.GetVendorFailure());
+        showToast('error', `${response?.data?.error?.message}`);
+      }
+    } catch (err) {
+      console.log(err);
+      yield put(ManagerAppAction.GetVendorFailure());
+      console.log(`%c${err.name}`, "color: red", ' => ', err)
+      showToast("error", `${err?.data?.error?.message}`)
+    }
+  }
+
 
 
   static *SetUser({ payload }) {

@@ -15,6 +15,7 @@ const BottomTabNavigation = createBottomTabNavigator();
 // make homeTab a functional component where I can import hooks
 
 export const ManagerBottomTab = () => {
+    console.log('manager===>>')
     return (
         <BottomTabNavigation.Navigator
             screenOptions={{

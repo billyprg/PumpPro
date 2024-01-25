@@ -15,6 +15,7 @@ const BottomTabNavigation = createBottomTabNavigator();
 // make homeTab a functional component where I can import hooks
 
 export const AdminBottomTab = () => {
+    console.log('admin')
     return (
         <BottomTabNavigation.Navigator
             screenOptions={{
@@ -56,7 +57,7 @@ export const AdminBottomTab = () => {
 
 const TabBarLabel = (props) => {
     const { tab, focus } = props;
-    console.log('tab-====>', tab)
+   
     return (
         <Text style={styles.tabBarLabel}>
             {tab.screenName}

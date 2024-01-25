@@ -18,10 +18,10 @@ export const ManagerAppStack = {
         key: 'ManagerHome',
     },
 
-    BottomStack: {
-        name: 'BottomStack',
+    ManagerBottomTab: {
+        name: 'ManagerBottomTab',
         component: ManagerBottomTab,
-        key: 'BottomStack'
+        key: 'ManagerBottomTab'
     }, 
 
 

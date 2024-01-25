@@ -1,5 +1,5 @@
 import {FlatList, Pressable, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {GlobalStyle} from '../../constants/GlobalStyle';
 import CustomText from '../../components/Text/CustomText';
 import VendorCard from '../../components/Cards/VendorCard/VendorCard';
@@ -12,6 +12,8 @@ import {useForm} from 'react-hook-form';
 import styles from './style';
 import CustomButton from '../../components/Buttons/CustomButton';
 import ScreenNameHeader from '../../components/Headers/ScreenNameHeader/ScreenNameHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { ManagerAppAction } from '../../store/actions';
 
 const AllVendor = () => {
   const {
@@ -19,12 +21,39 @@ const AllVendor = () => {
     handleSubmit,
     formState: {errors},
   } = useForm({mode: 'all'});
+  const user = useSelector(state => state.AuthReducer.user);
   const [addVendorSheet, showAddVendorSheet] = useState(false);
+  const dispatch = useDispatch();
+  
+  const vendorList = useSelector(state => state.ManagerAppReducer.vendors);
 
+  const getVendors = () =>{
+    console.log('user[0].plainTextToken', user[0].plainTextToken)
+    const payload = {
+      'token': user[0].plainTextToken
+    }
+   dispatch(ManagerAppAction.GetVendor(payload))
+  }
+
+  console.log('vendorList====>>', vendorList)
   const onPressAdd = data => {
     console.log('data===+>', data);
-    showAddVendorSheet(false);
+    const payload = {
+      ...data,
+      'token': user[0].plainTextToken
+    }
+    dispatch(ManagerAppAction.AddVendor(payload),()=>{
+      getVendors()
+      showAddVendorSheet(false);
+    })
+    
+
   };
+
+  useEffect(() => {
+    getVendors()
+  }, [])
+  
 
   const data = [
     {
@@ -46,7 +75,7 @@ const AllVendor = () => {
         bottomSheetContainerStyle={{backgroundColor: Colors.Primary}}
         children={
           <View style={styles.container}>
-            <View style={{backgroundColor:'red',bottom:10,right:-10}}>
+            <View style={{backgroundColor: 'red', bottom: 10, right: -10}}>
               <Icons.Entypo
                 name="cross"
                 size={Metrix.VerticalSize(25)}
@@ -55,13 +84,13 @@ const AllVendor = () => {
                 onPress={() => showAddVendorSheet(false)}
               />
             </View>
-            <View style={{height:15}}/>
+            <View style={{height: 15}} />
             <CustomInput
               boxStyle={styles.inputStyle}
-              placeholder="Vendor Name"
+              placeholder="Account Title"
               fontSize={scale(16)}
               control={control}
-              name="vendorName"
+              name="account_title"
               maxLength={20}
             />
 
@@ -70,7 +99,16 @@ const AllVendor = () => {
               placeholder="Contact Person"
               fontSize={scale(16)}
               control={control}
-              name="contactPerson"
+              name="contact_person"
+              maxLength={20}
+            />
+
+            <CustomInput
+              boxStyle={styles.inputStyle}
+              placeholder="Contact Email"
+              fontSize={scale(16)}
+              control={control}
+              name="email"
               maxLength={20}
             />
 
@@ -80,7 +118,7 @@ const AllVendor = () => {
               keyboardType={'numeric'}
               fontSize={scale(16)}
               control={control}
-              name="contactNo"
+              name="phone"
               maxLength={12}
             />
 
@@ -89,7 +127,7 @@ const AllVendor = () => {
               placeholder="Acc or IBAN no."
               fontSize={scale(16)}
               control={control}
-              name="accountNo"
+              name="account_no"
               maxLength={20}
             />
 
@@ -113,9 +151,8 @@ const AllVendor = () => {
   };
   return (
     <View style={GlobalStyle.container}>
-      <ScreenNameHeader backArrow={true} title={'All Vendors'}/>
+      <ScreenNameHeader backArrow={true} title={'All Vendors'} />
       <View style={GlobalStyle.paddingFlex}>
-
         <Pressable
           onPress={handleAddVendor}
           style={{
@@ -141,7 +178,7 @@ const AllVendor = () => {
         </Pressable>
 
         <FlatList
-          data={data}
+          data={vendorList}
           contentContainerStyle={{paddingBottom: verticalScale(5)}}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => (

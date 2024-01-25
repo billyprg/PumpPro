@@ -3,33 +3,35 @@ import React from 'react';
 import CustomText from '../../Text/CustomText';
 import LinearGradient from 'react-native-linear-gradient';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
-import { Colors } from '../../../config';
+import {Colors} from '../../../config';
 
 const VendorCard = ({item}) => {
+  console.log('item', item)
   return (
     <LinearGradient style={styles.container} colors={['#fe8c00', '#f83600']}>
-     
       <CustomText.BoldText
         style={styles.text}
         textAlign="left"
-        text={item?.vendorName}
-      />
-        <CustomText.BoldText
-        style={styles.text}
-        textAlign="left"
-        text={item?.contactNo}
+        text={item?.account_title}
       />
       <CustomText.BoldText
         style={styles.text}
         textAlign="left"
-        text={item?.contactPerson}
+        text={item?.contact_person}
       />
+      <CustomText.BoldText
+        style={styles.text}
+        textAlign="left"
+        text={item?.phone}
+      />
+
+      <CustomText.BoldText
+        style={styles.text}
+        textAlign="left"
+        text={item?.account_no}
+      />
+
     
-        <CustomText.BoldText
-        style={styles.text}
-        textAlign="left"
-        text={item?.accNo}
-      />
     </LinearGradient>
   );
 };
