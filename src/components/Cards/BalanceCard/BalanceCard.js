@@ -22,8 +22,8 @@ const BalanceCard = props => {
       </View>
 
       <View style={styles.balanceView}>
-      <Text style={styles.balTitle}>Total Balance</Text>
-        <Text style={styles.BalText}>$125,000</Text>
+      <Text style={styles.balTitle}>Total Revenue</Text>
+        <Text style={styles.BalText}>125,0000 Rs</Text>
       </View>
     </View>
   );

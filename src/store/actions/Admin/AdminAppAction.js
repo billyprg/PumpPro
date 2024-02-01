@@ -31,10 +31,10 @@ export default class AdminAppAction {
         }
     }
 
-    static CurrentDate() {
+    static CurrentDate(payload) {
         return {
             type: CURRENT_DATE,
-            
+            payload
         }
     }
 

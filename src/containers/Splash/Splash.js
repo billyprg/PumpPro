@@ -29,7 +29,8 @@ class Splash extends Component {
                       if (user?.user?.role_id == 1) {
                         NavigationService.replace(AdminAppStack.BottomStack.name)
                       } else {
-                        NavigationService.replace(ManagerAppStack.ManagerBottomTab.name)
+                        NavigationService.replace(AdminAppStack.BottomStack.name)
+                        // NavigationService.replace(ManagerAppStack.ManagerBottomTab.name)
                       }
                       // this.props.SignInSuccess(parsedData)
                     //   NavigationService.replace(AppStack.HomeStack.name)

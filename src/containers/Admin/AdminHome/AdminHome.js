@@ -10,6 +10,7 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import {GlobalStyle} from '../../../constants/GlobalStyle';
 import { AppStack } from '../../../config/navigationConfig/ManagerAppStack';
 import ScreenNameHeader from '../../../components/Headers/ScreenNameHeader/ScreenNameHeader';
+import { AdminAppStack } from '../../../config/navigationConfig/AdminAppStack';
 
 const AdminHome = () => {
   
@@ -44,9 +45,9 @@ const AdminHome = () => {
           <BalanceCard />
 
           <Pressable style={styles.inventoryContainer}>
-            <View style={styles.inventoryTitle}>
+            <Pressable onPress = {()=>NavigationService.navigate(AdminAppStack.Inventory.name)} style={styles.inventoryTitle}>
               <Text style={styles.headingText}>View Current Inventory</Text>
-            </View>
+            </Pressable>
 
      
           </Pressable>

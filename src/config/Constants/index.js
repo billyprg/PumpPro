@@ -17,3 +17,10 @@ export class AuthRoutes {
   }
   
   
+  export class CommonAppRoutes {
+    static SET_CURRENT_RATES = 'auth/fuel-type/store';
+    static GET_CURRENT_RATES = 'auth/fuel-type/';
+    
+   }
+   
+   

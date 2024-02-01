@@ -37,11 +37,19 @@ const More = () => {
       onPress: () => NavigationService.navigate('bla'),
     },
 
+   
     {
       id: 3,
+      screenName: 'Current Rates',
+      onPress: () => NavigationService.navigate(AdminAppStack.CurrentRates.name),
+    },
+
+    {
+      id: 4,
       screenName: 'Logout',
       onPress: () => handleLogout()
     },
+
   ];
 
   const renderItem = ({item}) => {

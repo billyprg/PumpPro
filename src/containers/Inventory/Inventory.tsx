@@ -22,7 +22,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+
 import { Buffer } from 'buffer';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import CalendarPicker from "react-native-calendar-picker";
@@ -77,7 +77,17 @@ import BleManager, {
   Peripheral,
 } from 'react-native-ble-manager';
 import { useDispatch, useSelector } from 'react-redux';
-import { AdminAppAction } from '../../store/actions';
+import { AdminAppAction, ManagerAppAction } from '../../store/actions';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import CustomButton from '../../components/Buttons/CustomButton';
+import BottomSheet from '../../components/RBSheet/RBSheet';
+import { GlobalStyle } from '../../constants/GlobalStyle';
+import CustomInput from '../../components/Inputs/Input';
+import Icons from '../../config/icons';
+import { Colors, Metrix } from '../../config';
+import { useForm } from 'react-hook-form';
+import SalesFunctions from '../../config/util/HelperFunctions/SalesFunctions';
+import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
@@ -94,7 +104,11 @@ const Inventory = () => {
 
   const circularProgressRef = useRef();
 
- 
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({mode: 'all'});
 
   // const handleEndShift = (val) =>{
   //   setRecordEndShift(val)
@@ -103,21 +117,21 @@ const Inventory = () => {
   //   alert(sale)
   // }
 
-
+  
 
   const [isScanning, setIsScanning] = useState(false);
+  const [hideBluetooth, setHideBluetooth] = useState(false)
   const [peripherals, setPeripherals] = useState(
     new Map<Peripheral['id'], Peripheral>(),
   );
   const [distanceFromObj, setDistanceFromObj] = useState(100);
-
-  console.debug('peripherals map updated', [...peripherals.entries()]);
 
   const addOrUpdatePeripheral = (id: string, updatedPeripheral: Peripheral) => {
     // new Map() enables changing the reference & refreshing UI.
     // TOFIX not efficient.
     setPeripherals(map => new Map(map.set(id, updatedPeripheral)));
   };
+
 
   const startScan = () => {
     if (!isScanning) {
@@ -190,8 +204,10 @@ const Inventory = () => {
   };
 
   const togglePeripheralConnection = async (peripheral: Peripheral) => {
+    setHideBluetooth(true)
     if (peripheral && peripheral.connected) {
       try {
+       
         await BleManager.disconnect(peripheral.id);
       } catch (error) {
         console.error(
@@ -387,8 +403,6 @@ const Inventory = () => {
   const renderItem = ({ item }: { item: Peripheral }) => {
     const backgroundColor = item.connected ? '#069400' : Colors.white;
     return (
-
-
       <TouchableHighlight
         underlayColor="#0082FC"
         onPress={() => togglePeripheralConnection(item)}>
@@ -412,91 +426,145 @@ const Inventory = () => {
 //   console.log('percentage before===>', percentage)
   percentage = Math.max(0, 100 - percentage);
 
-  const days = [
-    { id: 1, day: 'Monday' },
-    { id: 2, day: 'Tuesday' },
-    { id: 3, day: 'Wednesday' },
-    { id: 4, day: 'Thursday' },
-    { id: 5, day: 'Friday' },
-    { id: 6, day: 'Saturday' },
-    { id: 7, day: 'Sunday' },
-
-  ]
-
-  const [date, setShowDate] = useState(false);
-
-  const [color, setcolor] = useState(false)
-
-  const [showDay, setshowDay] = useState('')
-
-  const [hideDays, setHideDays] = useState(false)
-
-  const [startShift, showStartShift] = useState(false)
-  
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
 
   const dispatch = useDispatch()
   const shiftOneStatus = useSelector(state => state.AdminAppReducer.shiftOne);
   const shiftTwoStatus = useSelector(state => state.AdminAppReducer.shiftTwo);
+  const disabledDate = useSelector(state => state.AdminAppReducer.currDate);
 
   const [recordStart, setRecordStart] = useState(0)
   const [endShift, showEndShift] = useState(false)
   const [recordEndShift, setRecordEndShift] = useState(0)
   const [showSale, setShowSale] = useState(false)
-
-
   const [totalDaySale, setTotalDaySale] = useState({})
-
-
-
   const [endShiftValue, setEndShiftValue] = useState(0)
+  const [loadPetrolSheet, showLoadPetrolSheet] = useState(false);
+  const currentRates = useSelector(state => state.CommonReducer.current_rates);
+  const petrolInRupees = currentRates.sale_price_per_liter ;
 
-  const petrolInRupees = 300;
-
+  console.log('petrolInRupees==>', petrolInRupees)
+  const handleLoadPetrol = () => {
+    showLoadPetrolSheet(true)
+   };
 
   const calculateSale = (val: number) => {
     const saleObj = { ...totalDaySale }
     setEndShiftValue(val)
-    if (val > recordStart) {
-      let refill = val - recordStart;
-      setRecordStart(recordStart + refill)
-    }
     //Convert percentage to point  value
     let sale = (recordStart - val) / 100;
     //multiply it by total tank litre 
     sale = MAX_POINTS * sale
     //convert this litre to rupees
-    let saleInRupees = sale * petrolInRupees
+    let saleInRupees = Math.round(sale * petrolInRupees)
 
     // setFinalSale(saleInRupees)
-    saleObj['daySale'] = saleInRupees;
-    saleObj['day'] = selectedStartDate;
-    alert(`${totalDaySale}'rs`)
-    console.error(saleObj)
+    saleObj['sale_in_rs'] = saleInRupees;
+    saleObj['day'] = startDate;
+    // alert(`${totalDaySale}'rs`)
+   console.log('Sale for monday is', saleObj)
     showEndShift(false)
-    if (shiftOne) {
-      // dispatch(AdminAppAction.ShiftOneStatus(true))
-      // dispatch(AdminAppAction.ShiftTwoStatus(true))           
+    const payload = {
+      sale_in_rs : saleInRupees,
+      shift_type : shiftOne? '1' : '2',
+      litre_sold: 200,
+      date: '2024-1-12',
+      action:'end',
+      token: user[0].plainTextToken
+    }
+    if (shiftOne) {     
       setShiftOne(false)
+      dispatch(ManagerAppAction.PostShiftEnd(payload))
       setShiftTwo(true)
     }
     else  {
      setShiftTwo(false)
-    //  dispatch(AdminAppAction.ShiftTwoStatus(true))  
+     dispatch(ManagerAppAction.PostShiftEnd(payload))
      showCalendar(true)
 
     }
-    setHideDays(false)
   }
 
+  console.log('recordStart===>s', recordStart)
+  const handleLoad = (value) =>{
+    console.log('amount==>', value.amount)
+    const updatedOpenQuantity = SalesFunctions.LoadPetrol(value.amount,recordStart,MAX_POINTS);
+    setRecordStart(updatedOpenQuantity)
+    showLoadPetrolSheet(false)
+  }
+
+  const LoadPetrolSheet = () => {
+    console.log('its working');
+    return (
+      <BottomSheet
+      bottomSheetVisible={loadPetrolSheet}
+      onCloseReq={() => {
+        showLoadPetrolSheet(false);
+      }}
+      children={
+        <View style={styles.container}>
+        <View style={{backgroundColor: 'red', bottom: 10, right: -10}}>
+          <Icons.Entypo
+            name="cross"
+            size={Metrix.VerticalSize(25)}
+            color={Colors.Primary}
+            style={styles.crossIcon}
+            onPress={() => showLoadPetrolSheet(false)}
+          />
+        </View>
+        <View style={{height: 15}} />
+        <CustomInput
+          boxStyle={styles.inputStyle}
+          placeholder="Enter Amount in Litre"
+          fontSize={scale(16)}
+          control={control}
+          name="amount"
+          maxLength={20}
+        />
+
+
+        <CustomButton
+          restyleContainer={{
+            marginVertical: Metrix.VerticalSize(40),
+            backgroundColor: Colors.Yellow,
+          }}
+          text={'Load'}
+          onPress={handleSubmit(handleLoad)}
+        />
+      </View>
+      }
+    />
+    )
+    
+  };
+
+
   //Logic for Flow
+  const user = useSelector(state => state.AuthReducer.user);
   const [shiftOne, setShiftOne] = useState(shiftOneStatus);
   const [shiftTwo, setShiftTwo] = useState(shiftTwoStatus);
   const [calendar, showCalendar] = useState(false);
+  const [selectedStartDate, setSelectedStartDate] = useState(disabledDate);
+  const [showModal, setShowModal] = useState(false)
 
-  const handleShiftOne = (percentage : number) =>{
+  console.log('user==>', user)
+
+  const handleShift = (percentage : number) =>{
+    setShowModal(true)
     setRecordStart(percentage);
+    let shiftType = shiftOne? '1' : '2';
+    const payload = {
+      open_quantity: percentage,
+      shift_type: shiftType,
+      action:'start',
+      token: user[0].plainTextToken
+    }
+    
+    dispatch(ManagerAppAction.PostShiftStart(payload))
     showEndShift(true)
+
+   
+    
+   
   }
 
   useEffect(() => {
@@ -509,7 +577,13 @@ const Inventory = () => {
     dispatch(AdminAppAction.ShiftOneStatus(shiftOne))
     dispatch(AdminAppAction.ShiftTwoStatus(shiftTwo))
   }, [shiftOne,shiftTwo])
-  
+
+  useEffect(() => {
+    dispatch(AdminAppAction.CurrentDate(selectedStartDate))
+  }, [selectedStartDate])
+
+  // console.log('selectedStartDate', selectedStartDate)
+  // console.log('disabledDate', disabledDate)
 
   const onDateChange = (date) => {
     // Move the selected date one day forward
@@ -517,10 +591,7 @@ const Inventory = () => {
     // nextDay.setDate(nextDay.getDate() + 1);
 
     setSelectedStartDate(date);
-    // dispatch(AdminAppAction.ShiftOneStatus(true)) 
     setShiftOne(true) 
-
-    // setShiftOne(true);
     showCalendar(false);
   };
   
@@ -528,14 +599,12 @@ const Inventory = () => {
   const startDate = selectedStartDate ? selectedStartDate.toString() : "";
 
   const handleOk = (item) => {
-    setcolor(item?.id)
-    setHideDays(true)
     setTotalDaySale({ day: item?.day })
     showStartShift(true)
     // setshowDay(id)
     // console.error('days[showday]', days[showDay])
   }
-  const [jee, setjee] = useState([])
+ 
   const handleDaySelect = (item) => {
     Alert.alert(
       `Select Day`,
@@ -553,34 +622,20 @@ const Inventory = () => {
 
   }
 
-  // const handleDisable = () => {
-  //   setjee((prev) => [...prev, selectedStartDate]);
-  // };
+
+
   return (
     <>
       <StatusBar />
       <SafeAreaView style={styles.body}>
         <ScrollView>
-
-        {!hideDays &&
-
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', marginVertical: 10 }}>
-            {days.map((item, index) => {
-              return (
-                <Pressable onPress={() => handleDaySelect(item)} style={{ margin: 10, backgroundColor: color === index ? 'red' : 'orange', borderRadius: 10, padding: 5 }} key={index}>
-                  <Text style={styles.recordText}>{item?.day}</Text>
-                </Pressable >
-              )
-            })}
-          </View>}
-
-
-
-        <TouchableOpacity activeOpacity={0.8} style={styles.scanButton} onPress={startScan}>
+          {!hideBluetooth &&
+            <TouchableOpacity activeOpacity={0.8} style={styles.scanButton} onPress={startScan}>
           <Text style={styles.scanButtonText}>
-            {isScanning ? 'Scanning...' : 'Scan Bluetooth'}
+            { isScanning ? 'Scanning...' : 'Scan Bluetooth'}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> }
+     
 
         {!Array.from(peripherals.values()).find((item) => item.connected) &&
           <TouchableOpacity activeOpacity={0.8}
@@ -609,30 +664,34 @@ const Inventory = () => {
 
         {Array.from(peripherals.values()).find((item) => item.connected) &&
 
-
+           
 
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <CustomButton
+            text={'Load Petrol'}
+            onPress={handleLoadPetrol}
+            />
             {calendar &&     
              <View style={{ backgroundColor: 'white' }}>
-              <CalendarPicker selectedDayColor={'green'} onDateChange = {onDateChange}  />
+              <CalendarPicker selectedDayColor={'green'} onDateChange = {onDateChange} disabledDatesTextStyle={styles.disableDates} disabledDates={startDate}  />
             </View>
  }
        
             <View>
-              <Text style={styles.recordText}>SELECTED DATE:{startDate}</Text>
+              <Text style={styles.recordText}>SELECTED DATE: {startDate}</Text>
             </View>
 
 
 
             <Text style={styles.titleDevices}> Ultrasonic Sensor - Distance Calculator </Text>
             <AnimatedCircularProgress
-              size={200}
+              size={250}
               width={15}
               backgroundWidth={5}
               fill={fill}
-              tintColor="#00ff00"
-              tintColorSecondary="#ff0000"
-              backgroundColor="#3d5875"
+              tintColor="green"
+              tintColorSecondary="green"
+              backgroundColor="#d94826"
               // arcSweepAngle={240}
               // rotation={240}
               lineCap="round">
@@ -648,7 +707,7 @@ const Inventory = () => {
 
                 
 
-                <Text style={styles.recordText} onPress={() => handleShiftOne(percentage)} >{shiftOne ? 'Shift One Start' : 'Shift Two Start' }≈</Text>
+                <Text style={styles.recordText} onPress={() => handleShift(percentage)} >{shiftOne ? 'Shift One Start' : 'Shift Two Start' }≈</Text>
               </Pressable>
             }
 
@@ -677,11 +736,24 @@ const Inventory = () => {
           </View>
         }
 
-
+  <LoadPetrolSheet/>
+   <ConfirmationModal
+        header = {'Start Shift'}
+        body = {'Are you sure you want to start the Shift?'}
+        isVisible={showModal}
+        onYes={() => {
+          setShowModal(false);
+        }}
+        onClose={() => {
+         
+          setShowModal(false); // Close the modal
+        }}
+        // Other props...
+      />
 
 
 </ScrollView>
-      </SafeAreaView>
+</SafeAreaView>
     </>
   );
 };
@@ -702,7 +774,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     bottom: 0,
-    color: Colors.black,
+    color: Colors.Black,
   },
   scanButton: {
     alignItems: 'center',
@@ -716,10 +788,10 @@ const styles = StyleSheet.create({
   scanButtonText: {
     fontSize: 20,
     letterSpacing: 0.25,
-    color: Colors.white,
+    color: Colors.White,
   },
   body: {
-    backgroundColor: 'black',
+    backgroundColor: 'white' ,
     flex: 1,
   },
   sectionContainer: {
@@ -729,12 +801,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
-    color: Colors.black,
+    color: Colors.Black,
   },
   titleDevices: {
     fontSize: 24,
     fontWeight: '600',
-    color: Colors.white,
+    color: Colors.White,
     textAlign: 'center',
     marginVertical: 50,
   },
@@ -742,13 +814,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 18,
     fontWeight: '400',
-    color: Colors.dark,
+    color: Colors.DarkGray,
   },
   highlight: {
     fontWeight: '700',
   },
   footer: {
-    color: Colors.dark,
+    color: Colors.DarkGray,
     fontSize: 12,
     fontWeight: '600',
     padding: 4,
@@ -780,7 +852,7 @@ const styles = StyleSheet.create({
   noPeripherals: {
     margin: 10,
     textAlign: 'center',
-    color: Colors.white,
+    color: Colors.White,
   },
   input: {
     borderColor: "gray",
@@ -813,7 +885,36 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 10,
     marginVertical: 20
-  }
+  },
+  disableDates:{
+    color:'green',
+    backgroundColor:'red',
+    borderRadius:scale(100),
+    padding:(5)},
+
+    container: {
+      backgroundColor: Colors.Primary,
+      paddingHorizontal: moderateScale(20),
+      paddingVertical: verticalScale(10),
+      
+    },
+    inputStyle: {
+      marginTop: 0,
+      marginVertical: verticalScale(25),
+      borderWidth: 1,
+      borderColor: Colors.White,
+      backgroundColor: Colors.White,
+    },
+  
+    crossIcon: {
+      position: 'absolute',
+      right: 10,
+      top:-20,
+      borderColor:Colors.White,
+      backgroundColor:Colors.White,
+      borderRadius: 100,
+     
+    },
 });
 
 export default Inventory;

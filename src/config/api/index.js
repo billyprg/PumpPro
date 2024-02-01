@@ -1,15 +1,18 @@
 import Axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppAction } from "../../store/actions";
-import Store from "../../store";
 import { NavigationService } from "..";
 import { baseUrl } from "../variables";
-
+import Store from '../../store/index'
+import { useSelector } from "react-redux";
 
 /* The following lines will add access token in every request to server */
 
-// let userAccessToken = Store.getState()?.AppReducer?.user?.access_token ? Store.getState()?.AppReducer?.user?.access_token : "";
-// Axios.defaults.headers.common['access_token'] = userAccessToken;
+// let userAccessToken = Store.getState()?.AuthReducer?.user[0].plainTextToken ? Store.getState()?.AuthReducer?.user[0].plainTextToken : "";
+let bearerToken = useSelector(state => state.AuthReducer.user);
+console.log('bearerToken==>', bearerToken)
+// Axios.defaults.headers.common['Authorization'] = `Bearer ${bearerToken[0].plainTextToken}`;
+
 
 // Axios.interceptors.response.use((response) => {
 //     console.log('heyy')
@@ -35,15 +38,14 @@ import { baseUrl } from "../variables";
 // })
 
 export default class ApiCaller {
-
     static Get = (endPoint = "", headers = {}) => {
         return Axios.get(`${baseUrl}${endPoint}`, {
             headers
         }).then((res) => res).catch((err) => err.response)
     }
 
-    static Post = (endPoint = "", body = {}, headers = {}) => {
-        console.log('endPoint,baseUrl', endPoint,baseUrl)
+    static Post = (endPoint = "", body = {}, headers = { 'Authorization': `Bearer ${Store.getState()?.AuthReducer?.user[0].plainTextToken ? Store.getState()?.AuthReducer?.user[0].plainTextToken : ""}` }) => {
+        console.log('endPoint,baseUrl',headers)
         return Axios.post(`${baseUrl}${endPoint}`, body, {
             headers
         }).then((res) => res).catch((err) => err.response)

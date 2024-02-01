@@ -8,12 +8,12 @@ import InventoryIcon from 'react-native-vector-icons/FontAwesome6'
 
 
 import Colors from '../colors'
-import AllVendor from '../../containers/Vendor/AllVendor'
 import AdminHome from '../../containers/Admin/AdminHome/AdminHome'
 import { AdminBottomTab } from './AdminBottomTab'
 import Expenses from '../../containers/Expenses/Expenses'
 import More from '../../containers/More/More'
 import Inventory from '../../containers/Inventory/Inventory'
+import CurrentRates from '../../containers/CurrentRates/CurrentRates'
 
 export const AdminAppStack = {
     Home: {
@@ -40,6 +40,20 @@ export const AdminAppStack = {
         key: 'Expenses',
     },
 
+    Inventory: {
+        name: 'Inventory',
+        component: Inventory,
+        key: 'Inventory',
+    },
+
+    CurrentRates: {
+        name: 'CurrentRates',
+        component: CurrentRates,
+        key: 'CurrentRates',
+    },
+
+
+
 
 
   
@@ -60,7 +74,7 @@ export const bottomTabConfig = {
         iconGray: <SalesIcon size={25} color={Colors.White} name="finance" />,
         headerShown: false
     },
-    Vendor: {
+    Inventory: {
         screenName: "Inventory",
         component: Inventory,
         icon: <InventoryIcon size={24} color={Colors.Yellow} name="gas-pump" />,

@@ -3,6 +3,7 @@ import React from 'react';
 import { View, StatusBar} from "react-native"
 import { Colors } from './src/config';
 import Route from './src';
+import ToastComponent from './src/components/ToastComponent/ToastComponent';
 
 
 
@@ -14,7 +15,7 @@ const App = () => {
         <StatusBar backgroundColor={Colors.Primary} barStyle="light-content" />
         {/* <Loader /> */}
         <Route />
-       
+        <ToastComponent/>
       </View>
     )
   

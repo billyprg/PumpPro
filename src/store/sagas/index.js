@@ -1,7 +1,8 @@
 import { takeLatest, all } from 'redux-saga/effects'
-import { ADD_VENDOR, COMPLETE_PROFILE, GET_VENDOR, LOGOUT, SET_USER, SIGNIN, SIGNUP } from "../constants"
+import { ADD_VENDOR, COMPLETE_PROFILE, GET_CURRENT_RATES, GET_VENDOR, LOGOUT, POST_SHIFT_END, POST_SHIFT_START, SET_CURRENT_RATES, SET_USER, SIGNIN, SIGNUP } from "../constants"
 import AuthMiddleware from "../middlewares/AuthMiddleware"
 import ManagerAppMiddleware from '../middlewares/Manager/ManagerAppMiddleware'
+import CommonMiddleware from '../middlewares/Common/CommonMiddleware'
 
 export function* Sagas() {
     yield all([
@@ -11,9 +12,14 @@ export function* Sagas() {
         yield takeLatest(LOGOUT, AuthMiddleware.Logout),
         yield takeLatest(COMPLETE_PROFILE, AuthMiddleware.CompleteProfile),
 
+        //Common
+        yield takeLatest(GET_CURRENT_RATES, CommonMiddleware.GetCurrentRates),
+        yield takeLatest(SET_CURRENT_RATES, CommonMiddleware.SetCurrentRates),
 
         //Manager
         yield takeLatest(ADD_VENDOR, ManagerAppMiddleware.AddVendor),
         yield takeLatest(GET_VENDOR, ManagerAppMiddleware.GetVendor),
+        yield takeLatest(POST_SHIFT_START, ManagerAppMiddleware.PostShiftStart),
+        yield takeLatest(POST_SHIFT_END, ManagerAppMiddleware.PostShiftEnd),
     ])
 }

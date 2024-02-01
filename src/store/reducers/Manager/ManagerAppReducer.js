@@ -19,6 +19,12 @@ import {
   GET_VENDOR,
   GET_VENDOR_SUCCESS,
   GET_VENDOR_FAILURE,
+  POST_SHIFT_START,
+  POST_SHIFT_START_SUCCESS,
+  POST_SHIFT_START_FAILURE,
+  POST_SHIFT_END,
+  POST_SHIFT_END_SUCCESS,
+  POST_SHIFT_END_FAILURE,
 } from '../../constants';
 
 const initialState = {
@@ -128,7 +134,43 @@ export default function ManagerAppReducer(state = initialState, action) {
         loader: false,
       };
       break;
+      case POST_SHIFT_START:
+        state = {
+          ...state,
+          loader: true,
+        };
+        break;
+      case POST_SHIFT_START_SUCCESS:
+        state = {
+          ...state,
+          loader: false,
+        };
+        break;
+      case POST_SHIFT_START_FAILURE:
+        state = {
+          ...state,
+          loader: false,
+        };
+        break;
 
+        case POST_SHIFT_END:
+        state = {
+          ...state,
+          loader: true,
+        };
+        break;
+      case POST_SHIFT_END_SUCCESS:
+        state = {
+          ...state,
+          loader: false,
+        };
+        break;
+      case POST_SHIFT_END_FAILURE:
+        state = {
+          ...state,
+          loader: false,
+        };
+        break;
     case LOADER_TRUE:
       state = {
         ...state,

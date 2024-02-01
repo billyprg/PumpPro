@@ -17,7 +17,7 @@ export default class AuthMiddleware {
     try {
       let response = yield ApiCaller.Post(AuthRoutes.LOGIN, payload);
 
-      console.log('response', response?.data?.data);
+      console.log('response', response);
 
       if (response?.status === 200) {
         yield put(AuthAction.SignInSuccess(response?.data));
@@ -28,11 +28,12 @@ export default class AuthMiddleware {
         );
         if (response?.data?.data?.user?.role_id == 1) {
           console.log('fitrst')
-          // NavigationService.replace(AdminAppStack.BottomStack.name);
-          NavigationService.replace(ManagerAppStack.ManagerBottomTab.name);
+          NavigationService.replace(AdminAppStack.BottomStack.name);
+          // NavigationService.replace(ManagerAppStack.ManagerBottomTab.name);
         } else {
           console.log('second')
-          NavigationService.replace(ManagerAppStack.ManagerBottomTab.name);
+          NavigationService.replace(AdminAppStack.BottomStack.name);
+          // NavigationService.replace(ManagerAppStack.ManagerBottomTab.name);
         }
       } else {
         yield put(AuthAction.SignInFailure());

@@ -1,4 +1,4 @@
-import { ADD_VENDOR, ADD_VENDOR_FAILURE, ADD_VENDOR_SUCCESS, GET_VENDOR, GET_VENDOR_FAILURE, GET_VENDOR_SUCCESS } from "../../constants";
+import { ADD_VENDOR, ADD_VENDOR_FAILURE, ADD_VENDOR_SUCCESS, GET_VENDOR, GET_VENDOR_FAILURE, GET_VENDOR_SUCCESS, POST_SHIFT_END, POST_SHIFT_END_FAILURE, POST_SHIFT_END_SUCCESS, POST_SHIFT_START, POST_SHIFT_START_FAILURE, POST_SHIFT_START_SUCCESS } from "../../constants";
 
 export default class ManagerAppAction {
 
@@ -46,9 +46,44 @@ export default class ManagerAppAction {
         }
     }
 
+    static PostShiftStart(payload,cb) {
+        return {
+            type: POST_SHIFT_START,
+            payload,
+            cb
+        }
+    }
+    static PostShiftStartSuccess(payload) {
+        return {
+            type: POST_SHIFT_START_SUCCESS,
+            payload
+        }
+    }
+    static PostShiftStartFailure() {
+        return {
+            type: POST_SHIFT_START_FAILURE
+        }
+    }
 
+    static PostShiftEnd(payload,cb) {
+        return {
+            type: POST_SHIFT_END,
+            payload,
+            cb
+        }
+    }
+    static PostShiftEndSuccess(payload) {
+        return {
+            type: POST_SHIFT_END_SUCCESS,
+            payload
+        }
+    }
+    static PostShiftEndFailure() {
+        return {
+            type: POST_SHIFT_END_FAILURE
+        }
+    }
    
-
     static Logout(payload,cb) {
         return {
             type: LOGOUT,

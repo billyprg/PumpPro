@@ -16,10 +16,10 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import { Colors, Fonts } from '../../config';
 const CustomInput = forwardRef((props, ref) => {
   const [characterCount, setCharacterCount] = useState(0);
-
+  
   const {field} = useController({
     control: props.control,
-    defaultValue: props.defaultValue || '',
+    defaultValue: props.defaultValues || '',
     name: props.name,
     rules: props.rules,
   });
@@ -76,6 +76,7 @@ const CustomInput = forwardRef((props, ref) => {
           textContentType={props.textContentType}
           value={field.value}
           ref={ref}
+          defaultValue={field.value}
           onChangeText={field.onChange}
           multiline={props.multiline}
           numberOfLines={props.numberOfLines}
@@ -91,6 +92,7 @@ const CustomInput = forwardRef((props, ref) => {
           fontSize={props.fontSize}
           maxLength={props.maxLength}
           editable = {!props.disabled}
+          
         />
         {props.search ? (
           <Feather
