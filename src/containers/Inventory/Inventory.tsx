@@ -110,12 +110,6 @@ const Inventory = () => {
     formState: {errors},
   } = useForm({mode: 'all'});
 
-  // const handleEndShift = (val) =>{
-  //   setRecordEndShift(val)
-  //   setShowSale(true)
-  //   let sale = recordStart - recordEndShift
-  //   alert(sale)
-  // }
 
   
 
@@ -186,15 +180,17 @@ const Inventory = () => {
 
     const stringVal = decodeText(data.value);
     setDistanceFromObj(parseInt(stringVal));
+    
 
   };
+  console.log('distance===========>', distanceFromObj)
   const handleDiscoverPeripheral = (peripheral: Peripheral) => {
     console.debug('[handleDiscoverPeripheral] new BLE peripheral=', peripheral);
     if (!peripheral.name) {
       peripheral.name = 'NO NAME';
     }
 
-    console.log('peripheral ID =========>>', peripheral.id,peripheral.name)
+    // console.log('peripheral ID =========>>', peripheral.id,peripheral.name)
 
     //Additional check below to only show defined peripheral UUID ( PERIPHERAL_ID )
 
@@ -436,37 +432,39 @@ const Inventory = () => {
   const [endShift, showEndShift] = useState(false)
   const [recordEndShift, setRecordEndShift] = useState(0)
   const [showSale, setShowSale] = useState(false)
-  const [totalDaySale, setTotalDaySale] = useState({})
   const [endShiftValue, setEndShiftValue] = useState(0)
   const [loadPetrolSheet, showLoadPetrolSheet] = useState(false);
   const currentRates = useSelector(state => state.CommonReducer.current_rates);
-  const petrolInRupees = currentRates.sale_price_per_liter ;
+  // const petrolInRupees = currentRates.sale_price_per_liter ;
+  const petrolInRupees = 300 ;
 
-  console.log('petrolInRupees==>', petrolInRupees)
+  
+
   const handleLoadPetrol = () => {
     showLoadPetrolSheet(true)
    };
 
   const calculateSale = (val: number) => {
-    const saleObj = { ...totalDaySale }
     setEndShiftValue(val)
-    //Convert percentage to point  value
-    let sale = (recordStart - val) / 100;
-    //multiply it by total tank litre 
-    sale = MAX_POINTS * sale
-    //convert this litre to rupees
-    let saleInRupees = Math.round(sale * petrolInRupees)
+    let finalSale = recordStart - val;
+    finalSale = finalSale + currentSale;
+    setCurrentSale(finalSale)
 
-    // setFinalSale(saleInRupees)
-    saleObj['sale_in_rs'] = saleInRupees;
-    saleObj['day'] = startDate;
-    // alert(`${totalDaySale}'rs`)
-   console.log('Sale for monday is', saleObj)
+    //Convert percentage to point  value
+     finalSale = finalSale / 100;
+
+    //Multiply it by total tank litre 
+    finalSale = MAX_POINTS * finalSale
+    const litreSold = SalesFunctions.LitreSold(finalSale,MAX_POINTS)
+    console.log('finalSale', finalSale)
+    //Convert this litre to rupees
+    let saleInRupees = Math.round(finalSale * petrolInRupees)
+
     showEndShift(false)
     const payload = {
       sale_in_rs : saleInRupees,
       shift_type : shiftOne? '1' : '2',
-      litre_sold: 200,
+      litre_sold: litreSold,
       date: '2024-1-12',
       action:'end',
       token: user[0].plainTextToken
@@ -484,16 +482,20 @@ const Inventory = () => {
     }
   }
 
-  console.log('recordStart===>s', recordStart)
   const handleLoad = (value) =>{
     console.log('amount==>', value.amount)
+    if (value.amount) {
+      console.log('recordStart,percentage', recordStart,percentage)
+      setCurrentSale(recordStart - percentage)
+    }
     const updatedOpenQuantity = SalesFunctions.LoadPetrol(value.amount,recordStart,MAX_POINTS);
     setRecordStart(updatedOpenQuantity)
+    
     showLoadPetrolSheet(false)
   }
 
   const LoadPetrolSheet = () => {
-    console.log('its working');
+    
     return (
       <BottomSheet
       bottomSheetVisible={loadPetrolSheet}
@@ -545,8 +547,10 @@ const Inventory = () => {
   const [calendar, showCalendar] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState(disabledDate);
   const [showModal, setShowModal] = useState(false)
+  const [currentSale, setCurrentSale] = useState(0)
 
-  console.log('user==>', user)
+  console.log('currentSale===>', currentSale)   
+  // console.log('user==>', user)
 
   const handleShift = (percentage : number) =>{
     setShowModal(true)
@@ -582,9 +586,6 @@ const Inventory = () => {
     dispatch(AdminAppAction.CurrentDate(selectedStartDate))
   }, [selectedStartDate])
 
-  // console.log('selectedStartDate', selectedStartDate)
-  // console.log('disabledDate', disabledDate)
-
   const onDateChange = (date) => {
     // Move the selected date one day forward
     // const nextDay = new Date(date);
@@ -595,15 +596,8 @@ const Inventory = () => {
     showCalendar(false);
   };
   
-
   const startDate = selectedStartDate ? selectedStartDate.toString() : "";
 
-  const handleOk = (item) => {
-    setTotalDaySale({ day: item?.day })
-    showStartShift(true)
-    // setshowDay(id)
-    // console.error('days[showday]', days[showDay])
-  }
  
   const handleDaySelect = (item) => {
     Alert.alert(
@@ -621,8 +615,6 @@ const Inventory = () => {
     );
 
   }
-
-
 
   return (
     <>
@@ -663,9 +655,6 @@ const Inventory = () => {
           />}
 
         {Array.from(peripherals.values()).find((item) => item.connected) &&
-
-           
-
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <CustomButton
             text={'Load Petrol'}
@@ -673,7 +662,7 @@ const Inventory = () => {
             />
             {calendar &&     
              <View style={{ backgroundColor: 'white' }}>
-              <CalendarPicker selectedDayColor={'green'} onDateChange = {onDateChange} disabledDatesTextStyle={styles.disableDates} disabledDates={startDate}  />
+              <CalendarPicker selectedDayColor={'green'} onDateChange = {onDateChange} disabledDatesTextStyle={styles.disableDates} disabledDates={startDate}/>
             </View>
  }
        
@@ -703,34 +692,16 @@ const Inventory = () => {
             {
               (shiftOne || shiftTwo) &&
               <Pressable style={styles.buttonStyle}>
-
-
-                
-
-                <Text style={styles.recordText} onPress={() => handleShift(percentage)} >{shiftOne ? 'Shift One Start' : 'Shift Two Start' }≈</Text>
+                <Text style={styles.recordText} onPress={() => handleShift(percentage)} >{shiftOne ? 'Shift One Start' : 'Shift Two Start' }</Text>
               </Pressable>
             }
-
-
             {endShift &&
               <Pressable style={styles.buttonStyle}>
                 <Text style={styles.recordText} onPress={() => calculateSale(percentage)}>
                 {shiftOne ? 'End Shift One' : 'End Shift Two' }
                 </Text>
               </Pressable>
-
-
-
-
-
-
-
-
-
             }
-
-
-
 
             {percentage > 80 && <Text style={[styles.titleDevices, { color: "red" }]}> CRITICAL POINT REACHED! PLEASE STOP!</Text>}
           </View>

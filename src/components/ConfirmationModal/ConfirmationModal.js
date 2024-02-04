@@ -18,7 +18,7 @@ export default function ConfirmationModal({
   rightButtonText = 'No',
   style,
 }) {
-  console.log('hello it opened');
+  
   return (
     <>
       <Modal

@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
         letterSpacing: 0.49,
         paddingBottom: 0,
         paddingTop: Platform.OS == "android" ? Metrix.VerticalSize(2.5) : 0,
+        fontFamily: Fonts.Poppins600
 
     },
 
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
         borderRadius: Metrix.VerticalSize(10),
         flexDirection: "row",
         alignItems: "center",
+        
     },
     suffixIconStyle: {
         height: Metrix.VerticalSize(14),
@@ -132,14 +134,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     pickerContainer: {
+        justifyContent:'center',
         alignSelf: 'center',
         paddingVertical: Platform.OS === "ios" ? 22 : 0,
         paddingRight: Platform.OS === "ios" ? Metrix.HorizontalSize(25) : Metrix.HorizontalSize(15),
-        width: "88%",
+        width: "100%",
         borderRadius: 9,
         color: Colors.White,
-        backgroundColor: Colors.InputField,
-        borderColor: Colors.Primary,
+        backgroundColor: Colors.White,
+        borderColor: Colors.Yellow,
         borderWidth: 1,
         opacity: 0.8,
         shadowColor: Colors.Secondary,
@@ -168,7 +171,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: Metrix.HorizontalSize(14),
         textAlignVertical: "center",
         width: "100%",
-        paddingRight: Metrix.HorizontalSize(30)
+        paddingRight: Metrix.HorizontalSize(30),
     },
     placeholder: { color: Colors.LineColor }
 })

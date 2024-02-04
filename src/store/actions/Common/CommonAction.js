@@ -5,6 +5,9 @@ import {
   GET_CURRENT_RATES,
   GET_CURRENT_RATES_FAILURE,
   GET_CURRENT_RATES_SUCCESS,
+  GET_SALES,
+  GET_SALES_FAILURE,
+  GET_SALES_SUCCESS,
   GET_VENDOR,
   GET_VENDOR_FAILURE,
   GET_VENDOR_SUCCESS,
@@ -65,6 +68,26 @@ export default class CommonAction {
   static GetCurrentRatesFailure() {
     return {
       type: GET_CURRENT_RATES_FAILURE,
+    };
+  }
+
+  static GetSales(payload) {
+    return {
+      type: GET_SALES,
+      payload,
+    };
+  }
+
+  static GetSalesSuccess(payload) {
+    return {
+      type: GET_SALES_SUCCESS,
+      payload,
+    };
+  }
+
+  static GetSalesFailure() {
+    return {
+      type: GET_SALES_FAILURE,
     };
   }
 }

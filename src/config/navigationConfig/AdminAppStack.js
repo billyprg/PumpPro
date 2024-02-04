@@ -14,6 +14,7 @@ import Expenses from '../../containers/Expenses/Expenses'
 import More from '../../containers/More/More'
 import Inventory from '../../containers/Inventory/Inventory'
 import CurrentRates from '../../containers/CurrentRates/CurrentRates'
+import Sales from '../../containers/Sales/Sales'
 
 export const AdminAppStack = {
     Home: {
@@ -69,7 +70,7 @@ export const bottomTabConfig = {
     },
     Search: {
         screenName: "Sales",
-        component: AdminHome,
+        component: Sales,
         icon: <SalesIcon size={25} color={Colors.Yellow} name="finance" />,
         iconGray: <SalesIcon size={25} color={Colors.White} name="finance" />,
         headerShown: false

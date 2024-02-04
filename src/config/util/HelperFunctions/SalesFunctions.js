@@ -5,6 +5,14 @@
     return updatedOpenQuantity
 };  
 
+const LitreSold = (finalSale,tankSize) => {
+    //Getting final sale in point value of percent e.g : 30% => 0.3
+    const litres = finalSale * tankSize
+    return litres
+};  
+
+
 export default {
-    LoadPetrol
+    LoadPetrol,
+    LitreSold
 };
