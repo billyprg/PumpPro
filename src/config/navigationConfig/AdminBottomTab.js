@@ -30,7 +30,7 @@ export const AdminBottomTab = () => {
           backgroundColor: Colors.Primary,
         },
       }}
-      initialRouteName={bottomTabConfig.Home.component}>
+      initialRouteName={bottomTabConfig.Home.name}>
       {Object.entries(bottomTabConfig).map(tab => {
         return (
           <BottomTabNavigation.Screen

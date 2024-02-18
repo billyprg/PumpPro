@@ -7,7 +7,7 @@ export class AuthRoutes {
   }
   
   export class AdminAppRoutes {
-   
+    static GET_REVENUE = 'auth/revenue/';
   }
 
 
@@ -20,6 +20,9 @@ export class AuthRoutes {
   export class CommonAppRoutes {
     static SET_CURRENT_RATES = 'auth/fuel-type/store';
     static GET_CURRENT_RATES = 'auth/fuel-type/';
+    static EXPENSES = 'auth/expenses/store';
+    static GET_EXPENSES = 'auth/expenses/';
+    
     
    }
    

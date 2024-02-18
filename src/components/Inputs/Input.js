@@ -76,7 +76,7 @@ const CustomInput = forwardRef((props, ref) => {
           textContentType={props.textContentType}
           value={field.value}
           ref={ref}
-          defaultValue={field.value}
+          defaultValue={field.defaultValue}
           onChangeText={field.onChange}
           multiline={props.multiline}
           numberOfLines={props.numberOfLines}

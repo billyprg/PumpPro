@@ -37,13 +37,13 @@ export default class AuthMiddleware {
         }
       } else {
         yield put(AuthAction.SignInFailure());
-        showToast('error', `${response?.data?.error?.message}`);
+        showToast('error', `${response?.data?.error}`);
       }
     } catch (err) {
       console.log(err);
       yield put(AuthAction.SignInFailure());
       console.log(`%c${err.name}`, 'color: red', ' => ', err);
-      showToast('error', `${err?.data?.error?.message}`);
+      showToast('error', `${err?.data?.error}`);
     }
   }
 
@@ -99,15 +99,15 @@ export default class AuthMiddleware {
     }
   }
 
-  static *Logout({plainTextToken}) {
-    console.log('plainTextToken', plainTextToken);
+  static *Logout({payload}) {
+    console.log('payload', payload)
+    const {token} = payload;
     try {
       let response = yield ApiCaller.Post(
-        AuthRoutes.LOGOUT,
-        {plainTextToken},
+        AuthRoutes.LOGOUT,{},
         {
-          plainTextToken,
-        },
+          Authorization: `Bearer ${token}`,
+        }
       );
       console.log('response', response);
       AsyncStorage.removeItem('user');

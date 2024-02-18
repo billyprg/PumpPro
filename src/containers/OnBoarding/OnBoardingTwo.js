@@ -84,7 +84,7 @@ const OnBoardingTwo = () => {
         <Animatable.View
           iterationDelay={1000}
           duration={1500}
-          animation="flipInY"
+          animation="fadeInUp"
           style={{flex: 1, justifyContent: 'center'}}>
           <CustomButton
            restyleContainer = {{marginVertical:0,backgroundColor:'red'}}

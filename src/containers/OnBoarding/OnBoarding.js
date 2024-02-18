@@ -84,7 +84,7 @@ const OnBoarding = () => {
        <Animatable.View
        iterationDelay={1000}
        duration={1500}
-       animation="flipInY"
+       animation="fadeInUp"
        style={{flex: 1, justifyContent: 'center'}}>
        <CustomButton
          text={'Continue'}

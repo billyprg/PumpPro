@@ -1,5 +1,5 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import BalanceCard from '../../../components/Cards/BalanceCard/BalanceCard';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {Colors, Fonts, NavigationService} from '../../../config';
@@ -8,17 +8,85 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Icons from '../../../config/icons';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import {GlobalStyle} from '../../../constants/GlobalStyle';
-import { AppStack } from '../../../config/navigationConfig/ManagerAppStack';
+import {AppStack} from '../../../config/navigationConfig/ManagerAppStack';
 import ScreenNameHeader from '../../../components/Headers/ScreenNameHeader/ScreenNameHeader';
-import { AdminAppStack } from '../../../config/navigationConfig/AdminAppStack';
+import {AdminAppStack} from '../../../config/navigationConfig/AdminAppStack';
+import GraphComponent from '../../../components/Graph/GraphComponent';
+import {useDispatch, useSelector} from 'react-redux';
+import {AdminAppAction, CommonAction} from '../../../store/actions';
+import OtherFunctions from '../../../config/util/HelperFunctions/OtherFunctions';
+import Loader from '../../../components/Loader';
 
 const AdminHome = () => {
-  
+  const dispatch = useDispatch();
+  const [filterGraph, setFilterGraph] = useState('monthly');
+  const user = useSelector(state => state.AuthReducer.user);
+  const salesData = useSelector(state => state.CommonReducer.sales);
+  const loading = useSelector(state => state.CommonReducer.loader);
+  const revenue = useSelector(state => state.AdminAppReducer.revenue);
+  const [graphData, setGraphData] = useState(['100', '200', '3500', '4500']);
+
+  console.log('revenue===>', revenue)
+  const data = {
+    labels: [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ],
+    datasets: [
+      {
+        data: graphData,
+      },
+    ],
+  };
+
+  useEffect(() => {
+    if (salesData) {
+      handleGraphData(salesData);
+    }
+  }, [salesData]);
+  console.log('graphData===>', graphData);
+
+  console.log('HOME COMPONENT IS RERENDERING')
+
+  const handleGraphData = salesData => {
+    console.log('salesData in function==>', salesData);
+    // if (salesData.length > 0) {
+    const graphValue = salesData.map(item => item.total_amount);
+    setGraphData(graphValue);
+
+    // }
+  };
+
   const purchaseData = [
     {id: 1, vendor: 'PSO', bought: '17,000 ltr'},
     {id: 2, vendor: 'Shell', bought: '17,000 ltr'},
     {id: 3, vendor: 'Suparco', bought: '1.5 ltr'},
   ];
+
+  useEffect(() => {
+    const payload = {
+      token: user?.access_token?.plainTextToken,
+    };
+    dispatch(AdminAppAction.GetRevenue(payload));
+  }, []);
+
+  useEffect(() => {
+    const payload = {
+      action: filterGraph,
+      token: user?.access_token?.plainTextToken,
+    };
+    dispatch(CommonAction.GetSales(payload));
+  }, [filterGraph]);
 
   const UsersItem = ({item}) => {
     return (
@@ -35,21 +103,28 @@ const AdminHome = () => {
   return (
     <View style={GlobalStyle.container}>
       <KeyboardAwareScrollView style={{flex: 1}}>
-        <ScreenNameHeader title={'Dashboard'}/>
+        <ScreenNameHeader title={'Dashboard'} />
+
+        {/* <GraphComponent
+            graph={data}
+
+          /> */}
+
         <View
           style={{
             paddingHorizontal: moderateScale(20),
             marginTop: verticalScale(20),
           }}>
-         
-          <BalanceCard />
+          <BalanceCard revenue={revenue?.[0]?.revenue}/>
 
           <Pressable style={styles.inventoryContainer}>
-            <Pressable onPress = {()=>NavigationService.navigate(AdminAppStack.Inventory.name)} style={styles.inventoryTitle}>
+            <Pressable
+              onPress={() =>
+                NavigationService.navigate(AdminAppStack.Inventory.name)
+              }
+              style={styles.inventoryTitle}>
               <Text style={styles.headingText}>View Current Inventory</Text>
             </Pressable>
-
-     
           </Pressable>
 
           <View style={styles.purchasesMainView}>
@@ -83,6 +158,7 @@ const AdminHome = () => {
               </View>
             </Pressable>
           </View>
+          {loading && <Loader isModalLoader />}
         </View>
       </KeyboardAwareScrollView>
     </View>
@@ -104,7 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: verticalScale(10),
     paddingHorizontal: moderateScale(10),
-    alignItems: 'center'
+    alignItems: 'center',
   },
   headingText: {
     fontFamily: Fonts.Poppins600,

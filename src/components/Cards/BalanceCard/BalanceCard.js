@@ -5,7 +5,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import {Colors, Fonts, Images} from '../../../config';
 
-const BalanceCard = props => {
+const BalanceCard = ({revenue,...props}) => {
   const navigation = useNavigation();
   return (
     <View style={[styles.MainBox, props.restyleMain]}>
@@ -23,7 +23,7 @@ const BalanceCard = props => {
 
       <View style={styles.balanceView}>
       <Text style={styles.balTitle}>Total Revenue</Text>
-        <Text style={styles.BalText}>125,0000 Rs</Text>
+        <Text style={styles.BalText}>{revenue} PKR</Text>
       </View>
     </View>
   );

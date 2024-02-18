@@ -1,4 +1,4 @@
-import { CURRENT_DATE, SHIFT_ONE_STATUS, SHIFT_TWO_STATUS } from "../../constants"
+import { CURRENT_DATE, GET_REVENUE, GET_REVENUE_FAILURE, GET_REVENUE_SUCCESS, SHIFT_ONE_STATUS, SHIFT_TWO_STATUS } from "../../constants"
 
 
 export default class AdminAppAction {
@@ -35,6 +35,25 @@ export default class AdminAppAction {
         return {
             type: CURRENT_DATE,
             payload
+        }
+    }
+
+    static GetRevenue(payload) {
+        return {
+            type: GET_REVENUE,
+            payload,
+            
+        }
+    }
+    static GetRevenueSuccess(payload) {
+        return {
+            type: GET_REVENUE_SUCCESS,
+            payload
+        }
+    }
+    static GetRevenueFailure() {
+        return {
+            type: GET_REVENUE_FAILURE
         }
     }
 

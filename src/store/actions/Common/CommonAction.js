@@ -2,9 +2,18 @@ import {
   ADD_VENDOR,
   ADD_VENDOR_FAILURE,
   ADD_VENDOR_SUCCESS,
+  DELETE_EXPENSES,
+  DELETE_EXPENSES_FAILURE,
+  DELETE_EXPENSES_SUCCESS,
+  EXPENSES,
+  EXPENSES_FAILURE,
+  EXPENSES_SUCCESS,
   GET_CURRENT_RATES,
   GET_CURRENT_RATES_FAILURE,
   GET_CURRENT_RATES_SUCCESS,
+  GET_EXPENSES,
+  GET_EXPENSES_FAILURE,
+  GET_EXPENSES_SUCCESS,
   GET_SALES,
   GET_SALES_FAILURE,
   GET_SALES_SUCCESS,
@@ -88,6 +97,68 @@ export default class CommonAction {
   static GetSalesFailure() {
     return {
       type: GET_SALES_FAILURE,
+    };
+  }
+
+  static Expenses(payload,cb) {
+    return {
+      type: EXPENSES,
+      payload,
+      cb
+    };
+  }
+
+  static ExpensesSuccess(payload) {
+    return {
+      type: EXPENSES_SUCCESS,
+      payload,
+    };
+  }
+
+  static ExpensesFailure() {
+    return {
+      type: EXPENSES_FAILURE,
+    };
+  }
+
+  static GetExpenses(payload) {
+    return {
+      type: GET_EXPENSES,
+      payload,
+    };
+  }
+
+  static GetExpensesSuccess(payload) {
+    return {
+      type: GET_EXPENSES_SUCCESS,
+      payload,
+    };
+  }
+
+  static GetExpensesFailure() {
+    return {
+      type: GET_EXPENSES_FAILURE,
+    };
+  }
+
+
+  static DeleteExpenses(payload) {
+    return {
+      type: DELETE_EXPENSES,
+      payload,
+    };
+  }
+
+  static DeleteExpensesSuccess(payload) {
+    return {
+      type: DELETE_EXPENSES_SUCCESS,
+      payload,
+    };
+  }
+
+  static DeleteExpensesFailure() {
+    return {
+      type: DELETE_EXPENSES_FAILURE,
     };
   }
 }

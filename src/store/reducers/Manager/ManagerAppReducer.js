@@ -115,25 +115,6 @@ export default function ManagerAppReducer(state = initialState, action) {
       };
       break;
 
-    case GET_POSTS:
-      state = {
-        ...state,
-        loader: true,
-      };
-      break;
-    case GET_POSTS_SUCCESS:
-      state = {
-        ...state,
-        posts: action.payload,
-        loader: false,
-      };
-      break;
-    case GET_POSTS_FAILURE:
-      state = {
-        ...state,
-        loader: false,
-      };
-      break;
       case POST_SHIFT_START:
         state = {
           ...state,

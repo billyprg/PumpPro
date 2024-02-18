@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 /* The following lines will add access token in every request to server */
 
-// let userAccessToken = Store.getState()?.AuthReducer?.user[0].plainTextToken ? Store.getState()?.AuthReducer?.user[0].plainTextToken : "";
+// let userAccessToken = Store.getState()?.AuthReducer?.user?.access_token?.plainTextToken ? Store.getState()?.AuthReducer?.user?.access_token?.plainTextToken : "";
 let bearerToken = useSelector(state => state.AuthReducer.user);
 console.log('bearerToken==>', bearerToken)
 // Axios.defaults.headers.common['Authorization'] = `Bearer ${bearerToken[0].plainTextToken}`;
@@ -44,7 +44,7 @@ export default class ApiCaller {
         }).then((res) => res).catch((err) => err.response)
     }
 
-    static Post = (endPoint = "", body = {}, headers = { 'Authorization': `Bearer ${Store.getState()?.AuthReducer?.user[0].plainTextToken ? Store.getState()?.AuthReducer?.user[0].plainTextToken : ""}` }) => {
+    static Post =   (endPoint = "", body = {}, headers = {}) => {
         console.log('endPoint,baseUrl',headers)
         return Axios.post(`${baseUrl}${endPoint}`, body, {
             headers
@@ -56,4 +56,11 @@ export default class ApiCaller {
             headers
         }).then((res) => res).catch((err) => err.response)
     }
+
+    static Delete = (endPoint = "", headers = {}) => {
+        return Axios.delete(`${baseUrl}${endPoint}`, {
+            headers
+        }).then((res) => res).catch((err) => err.response)
+    }
+
 }

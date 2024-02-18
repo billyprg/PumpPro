@@ -28,9 +28,9 @@ const AllVendor = () => {
   const vendorList = useSelector(state => state.ManagerAppReducer.vendors);
 
   const getVendors = () =>{
-    console.log('user[0].plainTextToken', user[0].plainTextToken)
+    console.log('user?.access_token?.plainTextToken', user?.access_token?.plainTextToken)
     const payload = {
-      'token': user[0].plainTextToken
+      'token': user?.access_token?.plainTextToken
     }
    dispatch(ManagerAppAction.GetVendor(payload))
   }
@@ -40,7 +40,7 @@ const AllVendor = () => {
     console.log('data===+>', data);
     const payload = {
       ...data,
-      'token': user[0].plainTextToken
+      'token': user?.access_token?.plainTextToken
     }
     dispatch(ManagerAppAction.AddVendor(payload),()=>{
       getVendors()

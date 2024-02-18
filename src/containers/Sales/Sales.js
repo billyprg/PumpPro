@@ -22,7 +22,7 @@ const Sales = () => {
   useEffect(() => {
     const payload = {
       action: filter,
-      token: user[0].plainTextToken,
+      token: user?.access_token?.plainTextToken,
     };
     dispatch(CommonAction.GetSales(payload));
   }, [filter]);
@@ -30,12 +30,7 @@ const Sales = () => {
   const defaultValues = {
     filter: 'Filter',
   };
-  const GenderOptions = [
-    {label: 'Daily', value: 'daily'},
-    {label: 'Weekly', value: 'weekly'},
-    {label: 'Monthly', value: 'non-monthly'},
-  ];
-
+  
   const {
     control,
     handleSubmit,
@@ -50,19 +45,10 @@ const Sales = () => {
       <ScreenNameHeader title={'Sales'} backArrow={true} />
       <View style={[GlobalStyle.padding, styles.innerContainer]}>
         <View style={{width: '100%', alignSelf: 'flex-end', height: 100}}>
-          {/* <InputController
-          dropDown={true}
-          items={GenderOptions}
-          placeHolder="Filter"
-          control={control}
-          errors={errors}
-          defaultValues={defaultValues}
-          name={'filter'}
-          containerStyle={styles.inputField}
-          
-        /> */}
+       
           <Picker
             selectedValue={filter}
+            mode = {'dropdown'}
             onValueChange={value => setFilter(value)}>
             <Picker.Item label="Daily" value="daily" />
             <Picker.Item label="Monthly" value="monthly" />

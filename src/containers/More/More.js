@@ -10,7 +10,7 @@ import React from 'react';
 import {Colors, Fonts, NavigationService} from '../../config';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import Icons from '../../config/icons';
-import { AdminAppStack } from '../../config/navigationConfig/AdminAppStack';
+import { AdminAppStack, MoreStack } from '../../config/navigationConfig/AdminAppStack';
 import { GlobalStyle } from '../../constants/GlobalStyle';
 import ScreenNameHeader from '../../components/Headers/ScreenNameHeader/ScreenNameHeader';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,14 +22,17 @@ const More = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () =>{
-    console.log('user==>', user[0].plainTextToken);
-    dispatch(AuthAction.Logout(user[0].plainTextToken))
+    console.log('user==>', user?.access_token?.plainTextToken);
+    const payload = {
+      token : user?.access_token?.plainTextToken
+    }
+    dispatch(AuthAction.Logout(payload))
   }
   const moreData = [
     {
       id: 1,
       screenName: 'Expenses',
-      onPress: () => NavigationService.navigate(AdminAppStack.Expenses.name),
+      onPress: () => NavigationService.navigate(MoreStack.Expenses.name),
     },
     {
       id: 2,
@@ -41,7 +44,7 @@ const More = () => {
     {
       id: 3,
       screenName: 'Current Rates',
-      onPress: () => NavigationService.navigate(AdminAppStack.CurrentRates.name),
+      onPress: () => NavigationService.navigate(MoreStack.CurrentRates.name),
     },
 
     {

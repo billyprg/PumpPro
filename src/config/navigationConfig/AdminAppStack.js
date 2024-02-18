@@ -15,13 +15,14 @@ import More from '../../containers/More/More'
 import Inventory from '../../containers/Inventory/Inventory'
 import CurrentRates from '../../containers/CurrentRates/CurrentRates'
 import Sales from '../../containers/Sales/Sales'
+import { AdminMoreNavigator } from './BottomStacks'
 
 export const AdminAppStack = {
-    Home: {
-        name: 'AdminHome',
-        component: AdminHome,
-        key: 'AdminHome',
-    },
+    // Home: {
+    //     name: 'AdminHome',
+    //     component: AdminHome,
+    //     key: 'AdminHome',
+    // },
 
     BottomStack: {
         name: 'BottomStack',
@@ -29,6 +30,32 @@ export const AdminAppStack = {
         key: 'BottomStack'
     }, 
 
+    // More: {
+    //     name: 'More',
+    //     component: More,
+    //     key: 'More',
+    // },
+
+    // Expenses: {
+    //     name: 'Expenses',
+    //     component: Expenses,
+    //     key: 'Expenses',
+    // },
+
+    Inventory: {
+        name: 'Inventory',
+        component: Inventory,
+        key: 'Inventory',
+    },
+
+    // CurrentRates: {
+    //     name: 'CurrentRates',
+    //     component: CurrentRates,
+    //     key: 'CurrentRates',
+    // },  
+}
+
+export const MoreStack = {
     More: {
         name: 'More',
         component: More,
@@ -40,25 +67,13 @@ export const AdminAppStack = {
         component: Expenses,
         key: 'Expenses',
     },
-
-    Inventory: {
-        name: 'Inventory',
-        component: Inventory,
-        key: 'Inventory',
-    },
-
     CurrentRates: {
         name: 'CurrentRates',
         component: CurrentRates,
         key: 'CurrentRates',
     },
 
-
-
-
-
-  
-}
+  }
 
 export const bottomTabConfig = {
     Home: {
@@ -84,7 +99,7 @@ export const bottomTabConfig = {
     },
     More: {
         screenName: "More",
-        component: More,
+        component: AdminMoreNavigator,
         icon: <MoreIcon size={25} color={Colors.Yellow} name="menu" />,
         iconGray: <MoreIcon size={25} color={Colors.White} name="menu" />,
         headerShown: false

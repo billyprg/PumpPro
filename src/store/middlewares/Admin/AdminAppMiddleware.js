@@ -1,32 +1,36 @@
-import {AuthAction} from '../actions';
-import {NavigationService, ApiCaller, showToast} from '../../config';
+
+import {NavigationService, ApiCaller, showToast} from '../../../config';
 import {put} from 'redux-saga/effects';
 import {AuthRoutes} from '../../config/Constants';
 import {baseUrl} from '../../config/variables';
 import {AppStack} from '../../config/navigationConfig/AppStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AdminAppRoutes } from '../../../config/Constants';
+import { AdminAppAction } from '../../actions';
 // import { AppStack } from '../../config/navigationConfig/AppStack';
 
 export default class AdminAppMiddleware {
-  static *SignIn({payload}) {
-    try {
-      let response = yield ApiCaller.Post(AuthRoutes.LOGIN, payload);
 
-      console.log('response', response?.data?.data);
+  static *GetRevenue({payload}) {
+    const {token} = payload;
+    try {
+      let response = yield ApiCaller.Get(AdminAppRoutes.GET_REVENUE, {
+        Authorization: `Bearer ${token}`,
+      });
+
+      console.log('response', response?.data);
 
       if (response?.status === 200) {
-        yield put(AuthAction.SignInSuccess(response?.data));
-        yield put(AuthAction.SetUser(response?.data?.data));
-        NavigationService.replace(AppStack.HomeStack.name);
+        yield put(AdminAppAction.GetRevenueSuccess(response?.data));
       } else {
-        yield put(AuthAction.SignInFailure());
-        showToast('error', `${response?.data?.error?.message}`);
+        yield put(AdminAppAction.GetRevenueFailure());
+        showToast('error', `${response?.data?.error}`);
       }
     } catch (err) {
       console.log(err);
-      yield put(AuthAction.SignInFailure());
+      yield put(AdminAppAction.GetRevenueFailure());
       console.log(`%c${err.name}`, "color: red", ' => ', err)
-      showToast("error", `${err?.data?.error?.message}`)
+      showToast("error", `${err?.data?.error}`)
     }
   }
 
