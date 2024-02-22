@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {Animated, FlatList, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import BalanceCard from '../../../components/Cards/BalanceCard/BalanceCard';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AdminAppAction, CommonAction} from '../../../store/actions';
 import OtherFunctions from '../../../config/util/HelperFunctions/OtherFunctions';
 import Loader from '../../../components/Loader';
+import LiquidProgress from '../../../components/TankContainer/TankContainer';
 
 const AdminHome = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,15 @@ const AdminHome = () => {
   const revenue = useSelector(state => state.AdminAppReducer.revenue);
   const [graphData, setGraphData] = useState(['100', '200', '3500', '4500']);
 
-  console.log('revenue===>', revenue)
+  console.log('revenue===>', revenue);
+  const [potty, setpotty] = useState(0);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setpotty(true);
+    }, 4000);
+  }, []);
+
   const data = {
     labels: [
       'Jan',
@@ -56,7 +65,7 @@ const AdminHome = () => {
   }, [salesData]);
   console.log('graphData===>', graphData);
 
-  console.log('HOME COMPONENT IS RERENDERING')
+  console.log('HOME COMPONENT IS RERENDERING');
 
   const handleGraphData = salesData => {
     console.log('salesData in function==>', salesData);
@@ -105,17 +114,33 @@ const AdminHome = () => {
       <KeyboardAwareScrollView style={{flex: 1}}>
         <ScreenNameHeader title={'Dashboard'} />
 
-        {/* <GraphComponent
-            graph={data}
-
-          /> */}
-
         <View
           style={{
             paddingHorizontal: moderateScale(20),
             marginTop: verticalScale(20),
           }}>
-          <BalanceCard revenue={revenue?.[0]?.revenue}/>
+          <BalanceCard revenue={revenue?.[0]?.revenue} />
+
+          <GraphComponent
+          // graph={data}
+          />
+
+          {potty ? (
+            <LiquidProgress
+              backgroundColor={'black'}
+              frontWaveColor={'blue'}
+              backWaveColor={'skyblue'}
+              fill={50}
+              size={290}
+              customMask={
+                <View
+                  style={{
+                    backgroundColor: 'red',
+                    width: 290,
+                    height: 290,
+                  }}></View>
+              }></LiquidProgress>
+          ) : null}
 
           <Pressable style={styles.inventoryContainer}>
             <Pressable

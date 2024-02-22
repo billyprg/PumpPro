@@ -37,9 +37,8 @@ const More = () => {
     {
       id: 2,
       screenName: 'Rents',
-      onPress: () => NavigationService.navigate('bla'),
+      onPress: () =>  NavigationService.navigate(MoreStack.Rents.name),
     },
-
    
     {
       id: 3,

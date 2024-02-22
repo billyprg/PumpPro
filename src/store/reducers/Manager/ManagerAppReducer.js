@@ -25,12 +25,19 @@ import {
   POST_SHIFT_END,
   POST_SHIFT_END_SUCCESS,
   POST_SHIFT_END_FAILURE,
+  RENT_SUCCESS,
+  RENT_FAILURE,
+  RENT,
+  COLLECT_RENT_SUCCESS,
+  COLLECT_RENT,
+  COLLECT_RENT_FAILURE,
 } from '../../constants';
 
 const initialState = {
   user: {},
   loader: false,
   vendors: [],
+  rents: [],
 };
 
 export default function ManagerAppReducer(state = initialState, action) {
@@ -101,7 +108,7 @@ export default function ManagerAppReducer(state = initialState, action) {
       };
       break;
     case GET_VENDOR_SUCCESS:
-      console.log('action.payload', action.payload)
+      console.log('action.payload', action.payload);
       state = {
         ...state,
         vendors: action.payload,
@@ -115,43 +122,82 @@ export default function ManagerAppReducer(state = initialState, action) {
       };
       break;
 
-      case POST_SHIFT_START:
-        state = {
-          ...state,
-          loader: true,
-        };
-        break;
-      case POST_SHIFT_START_SUCCESS:
-        state = {
-          ...state,
-          loader: false,
-        };
-        break;
-      case POST_SHIFT_START_FAILURE:
-        state = {
-          ...state,
-          loader: false,
-        };
-        break;
+    case POST_SHIFT_START:
+      state = {
+        ...state,
+        loader: true,
+      };
+      break;
+    case POST_SHIFT_START_SUCCESS:
+      state = {
+        ...state,
+        loader: false,
+      };
+      break;
+    case POST_SHIFT_START_FAILURE:
+      state = {
+        ...state,
+        loader: false,
+      };
+      break;
 
-        case POST_SHIFT_END:
-        state = {
-          ...state,
-          loader: true,
-        };
-        break;
-      case POST_SHIFT_END_SUCCESS:
-        state = {
-          ...state,
-          loader: false,
-        };
-        break;
-      case POST_SHIFT_END_FAILURE:
-        state = {
-          ...state,
-          loader: false,
-        };
-        break;
+    case POST_SHIFT_END:
+      state = {
+        ...state,
+        loader: true,
+      };
+      break;
+    case POST_SHIFT_END_SUCCESS:
+      state = {
+        ...state,
+        loader: false,
+      };
+      break;
+    case POST_SHIFT_END_FAILURE:
+      state = {
+        ...state,
+        loader: false,
+      };
+      break;
+
+    case RENT:
+      state = {
+        ...state,
+        loader: true,
+      };
+      break;
+    case RENT_SUCCESS:
+      state = {
+        ...state,
+        rents: action.payload,
+        loader: false,
+      };
+      break;
+    case RENT_FAILURE:
+      state = {
+        ...state,
+        loader: false,
+      };
+      break;
+
+    case COLLECT_RENT:
+      state = {
+        ...state,
+        loader: true,
+      };
+      break;
+    case COLLECT_RENT_SUCCESS:
+      state = {
+        ...state,
+        loader: false,
+      };
+      break;
+    case COLLECT_RENT_FAILURE:
+      state = {
+        ...state,
+        loader: false,
+      };
+      break;
     case LOADER_TRUE:
       state = {
         ...state,

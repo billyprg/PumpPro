@@ -2,7 +2,7 @@
  * Sample BLE React Native App
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -29,6 +29,12 @@ import CalendarPicker from "react-native-calendar-picker";
 
 
 
+let r = 7.3;
+let pi = 3.14;
+let maxHeight = 27;
+let actualHeight; // in cm
+let capacity;
+let volume;
 
 
 //Generic function for encoding string to Uint8Array
@@ -77,17 +83,20 @@ import BleManager, {
   Peripheral,
 } from 'react-native-ble-manager';
 import { useDispatch, useSelector } from 'react-redux';
-import { AdminAppAction, ManagerAppAction } from '../../store/actions';
+import { AdminAppAction, CommonAction, ManagerAppAction } from '../../store/actions';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import CustomButton from '../../components/Buttons/CustomButton';
 import BottomSheet from '../../components/RBSheet/RBSheet';
 import { GlobalStyle } from '../../constants/GlobalStyle';
 import CustomInput from '../../components/Inputs/Input';
 import Icons from '../../config/icons';
-import { Colors, Metrix } from '../../config';
+import { Colors, Metrix, Fonts } from '../../config';
 import { useForm } from 'react-hook-form';
 import SalesFunctions from '../../config/util/HelperFunctions/SalesFunctions';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
+import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadPetrolModal from '../../components/LoadPetrolModal/LoadPetrolModal';
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
@@ -98,7 +107,7 @@ declare module 'react-native-ble-manager' {
     connecting?: boolean;
   }
 }
-const MAX_POINTS = 19;
+const MAX_POINTS = 27;
 const oneLitreInCm = 4.25;
 const Inventory = () => {
 
@@ -118,7 +127,7 @@ const Inventory = () => {
   const [peripherals, setPeripherals] = useState(
     new Map<Peripheral['id'], Peripheral>(),
   );
-  const [distanceFromObj, setDistanceFromObj] = useState(19);
+  const [distanceFromObj, setDistanceFromObj] = useState(25);
 
   const addOrUpdatePeripheral = (id: string, updatedPeripheral: Peripheral) => {
     // new Map() enables changing the reference & refreshing UI.
@@ -177,15 +186,34 @@ const Inventory = () => {
     data: BleManagerDidUpdateValueForCharacteristicEvent,
   ) => {
 
-    console.log('data===========>', data)
+    // console.log('data===========>', data)
     const stringVal = decodeText(data.value);
-    console.log('stringVal', stringVal)
+    console.log('stringVal===>', stringVal)
+
+    // Calculate water level in meters
+    actualHeight = maxHeight - stringVal;
+
+
+
+    if (stringVal <= maxHeight) {
+      // Calculate volume in cubic meters
+      volume = ((pi * (r * r)) * (actualHeight));
+
+      // Convert volume to liters
+      capacity = (volume / 1000).toFixed(1);
+      // capacity.toFixed(0);  
+    } else {
+      capacity = 0
+      volume = 0;
+    }
+
+    console.log('litres==>', capacity)
     setDistanceFromObj(parseInt(stringVal));
 
 
 
   };
-  console.log('distance===========>', distanceFromObj)
+  // console.log('distance===========>', distanceFromObj)
   const handleDiscoverPeripheral = (peripheral: Peripheral) => {
     console.debug('[handleDiscoverPeripheral] new BLE peripheral=', peripheral);
     if (!peripheral.name) {
@@ -196,9 +224,9 @@ const Inventory = () => {
 
     //Additional check below to only show defined peripheral UUID ( PERIPHERAL_ID )
 
-    // if (PERIPHERAL_ID.includes(peripheral.id)) {
-    addOrUpdatePeripheral(peripheral.id, peripheral);
-    // }
+    if (PERIPHERAL_ID.includes(peripheral.id)) {
+      addOrUpdatePeripheral(peripheral.id, peripheral);
+    }
   };
 
   const togglePeripheralConnection = async (peripheral: Peripheral) => {
@@ -428,6 +456,7 @@ const Inventory = () => {
   const dispatch = useDispatch()
   const shiftOneStatus = useSelector(state => state.AdminAppReducer.shiftOne);
   const shiftTwoStatus = useSelector(state => state.AdminAppReducer.shiftTwo);
+  const petrolInRupees = useSelector(state => state.CommonReducer.current_rates);
   const disabledDate = useSelector(state => state.AdminAppReducer.currDate);
   const [petrolBeforeLoad, setPetrolBeforeLoad] = useState(0)
   const [recordStart, setRecordStart] = useState(0)
@@ -436,39 +465,43 @@ const Inventory = () => {
   const [showSale, setShowSale] = useState(false)
   const [endShiftValue, setEndShiftValue] = useState(0)
   const [loadPetrolSheet, showLoadPetrolSheet] = useState(false);
-  const currentRates = useSelector(state => state.CommonReducer.current_rates);
-  // const petrolInRupees = currentRates.sale_price_per_liter ;
-  const petrolInRupees = 300;
 
+  // const petrolInRupees = currentRates.sale_price_per_liter ;
+
+
+  console.log('petrolInRupees', petrolInRupees)
 
 
   const handleLoadPetrol = (currPetrol: number) => {
+    console.log('currPetrol', currPetrol)
     showLoadPetrolSheet(true)
     setPetrolBeforeLoad(currPetrol)
   };
 
-  const calculateSale = (val: number) => {
-    setEndShiftValue(val)
-    let finalSale = recordStart - val;
+  const calculateSale = (closingLitre: number) => {
+    setEndShiftValue(closingLitre)
+    let finalSale = recordStart - closingLitre;
     finalSale = finalSale + currentSale;
     setCurrentSale(finalSale)
 
-    //Convert percentage to point  value
-    finalSale = finalSale / 100;
+    // //Convert percentage to point  value
+    // finalSale = finalSale / 100;
 
-    //Multiply it by total tank litre 
-    finalSale = finalSale * oneLitreInCm
-    const litreSold = finalSale;
-    console.log('finalSale', finalSale)
+    // //Multiply it by total tank litre 
+    // finalSale = finalSale * oneLitreInCm
+
+
+    const litreSold = closingLitre;
+    console.log('finalSale==>', saleObject)
     //Convert this litre to rupees
-    let saleInRupees = Math.round(finalSale * petrolInRupees)
+    let saleInRupees = Math.round(finalSale * petrolInRupees.sale_price_per_liter)
 
     showEndShift(false)
     const payload = {
+      ...saleObject,
       sale_in_rs: saleInRupees,
       shift_type: shiftOne ? '1' : '2',
-      litre_sold: litreSold,
-      date: '2024-1-12',
+      litre_sold: closingLitre,
       action: 'end',
       token: user?.access_token?.plainTextToken
     }
@@ -476,74 +509,85 @@ const Inventory = () => {
       setShiftOne(false)
       dispatch(ManagerAppAction.PostShiftEnd(payload))
       setShiftTwo(true)
+      setSaleObject({})
     }
     else {
       setShiftTwo(false)
       dispatch(ManagerAppAction.PostShiftEnd(payload))
       showCalendar(true)
+      setSaleObject({})
 
     }
+
   }
 
   const handleLoad = (currentQuanitity) => {
     const petrolLoaded = petrolBeforeLoad - currentQuanitity;
     console.warn(petrolLoaded)
-
-    console.log('recordStart,percentage', recordStart, percentage)
     setCurrentSale(recordStart - petrolBeforeLoad)
-
-
     const updatedOpenQuantity = SalesFunctions.LoadPetrol(recordStart, petrolLoaded);
     setRecordStart(updatedOpenQuantity)
-
     showLoadPetrolSheet(false)
   }
 
-  const LoadPetrolSheet = () => {
+  // const LoadPetrolSheet = () => {
+  //   const loadPetrolSheetComponent = useMemo(() => {
+  //     return (
+  //       <BottomSheet
+  //         bottomSheetVisible={loadPetrolSheet}
+  //         onCloseReq={() => {
+  //           showLoadPetrolSheet(false);
+  //         }}
+  //         children={
+  //           <View style={styles.container}>
+  //             <View style={{ backgroundColor: 'red', bottom: 10, right: -10 }}>
+  //               <Icons.Entypo
+  //                 name="cross"
+  //                 size={Metrix.VerticalSize(25)}
+  //                 color={Colors.Primary}
+  //                 style={styles.crossIcon}
+  //                 onPress={() => showLoadPetrolSheet(false)}
+  //               />
+  //             </View>
+  //             <View style={{ height: 15 }} />
+  //             <CustomInput
+  //               editable={false}
+  //               boxStyle={styles.inputStyle}
+  //               placeholder="Enter Amount in Litre"
+  //               fontSize={scale(16)}
+  //               control={control}
+  //               name="amount"
+  //               maxLength={20}
+  //             />
 
-    return (
-      <BottomSheet
-        bottomSheetVisible={loadPetrolSheet}
-        onCloseReq={() => {
-          showLoadPetrolSheet(false);
-        }}
-        children={
-          <View style={styles.container}>
-            <View style={{ backgroundColor: 'red', bottom: 10, right: -10 }}>
-              <Icons.Entypo
-                name="cross"
-                size={Metrix.VerticalSize(25)}
-                color={Colors.Primary}
-                style={styles.crossIcon}
-                onPress={() => showLoadPetrolSheet(false)}
-              />
-            </View>
-            <View style={{ height: 15 }} />
-            {/* <CustomInput
-          editable = {false}
-          boxStyle={styles.inputStyle}
-          placeholder="Enter Amount in Litre"
-          fontSize={scale(16)}
-          control={control}
-          name="amount"
-          maxLength={20}
-        /> */}
+  //             <CustomButton
+  //               restyleContainer={{
+  //                 marginVertical: Metrix.VerticalSize(40),
+  //                 backgroundColor: Colors.Yellow,
+  //               }}
+  //               text={'Confirm'}
+  //               onPress={() => handleLoad(capacity)}
+  //             />
+  //           </View>
+  //         }
+  //       />
+  //     );
+  //   }, []);
+
+  //   return loadPetrolSheetComponent;
+  // };
 
 
-            <CustomButton
-              restyleContainer={{
-                marginVertical: Metrix.VerticalSize(40),
-                backgroundColor: Colors.Yellow,
-              }}
-              text={'Confirm'}
-              onPress={() => handleLoad(percentage)}
-            />
-          </View>
-        }
-      />
-    )
 
-  };
+  // const onHandleConfirmation = ()=> {
+  //   console.log('value==>', value);
+  //   setShowModal(false);
+
+  //   setSaleObject(value)
+
+
+
+  // });
 
 
   //Logic for Flow
@@ -551,25 +595,94 @@ const Inventory = () => {
   const [shiftOne, setShiftOne] = useState(shiftOneStatus);
   const [shiftTwo, setShiftTwo] = useState(shiftTwoStatus);
   const [calendar, showCalendar] = useState(false);
-  const [selectedStartDate, setSelectedStartDate] = useState(disabledDate);
+  const [selectedDates, setSelectedDates] = useState([]);
   const [showModal, setShowModal] = useState(false)
-  const [currentSale, setCurrentSale] = useState(0)
+  const [currentSale, setCurrentSale] = useState(0);
+  const [saleObject, setSaleObject] = useState({})
 
-  console.log('currentSale===>', currentSale)
-  // console.log('user==>', user)
 
-  const handleShift = (percentage: number) => {
+  useEffect(() => {
+    loadSelectedDates();
+  }, [])
+
+
+  useEffect(() => {
+
+    const token = {
+      token: user?.access_token?.plainTextToken,
+    };
+    dispatch(CommonAction.GetCurrentRates(token));
+  }, []);
+
+  const loadSelectedDates = async () => {
+    try {
+      const storedDates = await AsyncStorage.getItem('selectedDates');
+      if (storedDates !== null) {
+        setSelectedDates(JSON.parse(storedDates))
+
+      }
+
+    }
+    catch (e) {
+      setSelectedDates([])
+    }
+  }
+
+  const saveSelectedDates = async (dates) => {
+    try {
+      await AsyncStorage.setItem('selectedDates', JSON.stringify(dates))
+    } catch (error) {
+      console.log('error in dates', error)
+    }
+  }
+  console.log('saleObject========>', saleObject)
+  const onDateChange = (date) => {
+
+    const selectedDateString = moment(date).format('YYYY-MM-DD');
+    setSaleObject({ date: selectedDateString })
+    console.log('date===>', selectedDateString)
+    // Check if the date is already selected
+    const isDateSelected = selectedDates.includes(selectedDateString);
+    let updatedDates;
+
+    if (isDateSelected) {
+      // Date is already selected, remove it from the list
+
+      updatedDates = selectedDates.filter((selectedDate) => selectedDate !== selectedDateString);
+      setSelectedDates(updatedDates);
+    } else {
+      // Date is not selected, add it to the list 
+      updatedDates = [...selectedDates, selectedDateString];
+      setSelectedDates(updatedDates);
+    }
+    // Save the updated dates to AsyncStorage
+    saveSelectedDates(updatedDates);
+    // setSelectedDates(date);
+    setShiftOne(true)
+    showCalendar(false);
+
+  };
+
+
+
+
+
+
+  const handleShift = (currentLitres: number) => {
+    const {supervisor_name} = saleObject
     setShowModal(true)
-    setRecordStart(percentage);
+    setRecordStart(currentLitres);
     let shiftType = shiftOne ? '1' : '2';
     const payload = {
-      open_quantity: percentage,
+      open_quantity: currentLitres,
       shift_type: shiftType,
       action: 'start',
-      token: user?.access_token?.plainTextToken
+      token: user?.access_token?.plainTextToken,
+      supervisor_name: supervisor_name
     }
 
     dispatch(ManagerAppAction.PostShiftStart(payload))
+    setShowModal(false)
     showEndShift(true)
 
 
@@ -588,39 +701,14 @@ const Inventory = () => {
     dispatch(AdminAppAction.ShiftTwoStatus(shiftTwo))
   }, [shiftOne, shiftTwo])
 
-  useEffect(() => {
-    dispatch(AdminAppAction.CurrentDate(selectedStartDate))
-  }, [selectedStartDate])
-
-  const onDateChange = (date) => {
-    // Move the selected date one day forward
-    // const nextDay = new Date(date);
-    // nextDay.setDate(nextDay.getDate() + 1);
-
-    setSelectedStartDate(date);
-    setShiftOne(true)
-    showCalendar(false);
-  };
-
-  const startDate = selectedStartDate ? selectedStartDate.toString() : "";
 
 
-  const handleDaySelect = (item) => {
-    Alert.alert(
-      `Select Day`,
-      `Are you sure you want to select ${item?.day}`,
-      [
-        { text: 'Yes', onPress: () => handleOk(item) },
-        {
-          text: 'Cancel',
-          style: 'cancel',
+  console.log('selectedDates====>', selectedDates)
 
-        },
-      ],
-      { cancelable: false },
-    );
 
-  }
+  const startDate = selectedDates ? selectedDates.toString() : "";
+
+
 
   return (
     <>
@@ -630,7 +718,7 @@ const Inventory = () => {
           {!hideBluetooth &&
             <TouchableOpacity activeOpacity={0.8} style={styles.scanButton} onPress={startScan}>
               <Text style={styles.scanButtonText}>
-                {isScanning ? 'Scanning...' : 'Scan Bluetooth'}
+                {isScanning ? 'Scanning...' : 'Connect'}
               </Text>
             </TouchableOpacity>}
 
@@ -644,13 +732,13 @@ const Inventory = () => {
             </TouchableOpacity>
           }
 
-          {Array.from(peripherals.values()).length === 0 && (
+          {/* {Array.from(peripherals.values()).length === 0 && (
             <View style={styles.row}>
               <Text style={styles.noPeripherals}>
                 No Peripherals, press "Scan Bluetooth" above.
               </Text>
             </View>
-          )}
+          )} */}
 
           {!Array.from(peripherals.values()).find((item) => item.connected) &&
             <FlatList
@@ -664,22 +752,32 @@ const Inventory = () => {
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <CustomButton
                 text={'Load Petrol'}
-                onPress={() => handleLoadPetrol(percentage)}
+                onPress={() => handleLoadPetrol(capacity)}
               />
-              {calendar &&
-                <View style={{ backgroundColor: 'white' }}>
-                  <CalendarPicker selectedDayColor={'green'} onDateChange={onDateChange} disabledDatesTextStyle={styles.disableDates} disabledDates={startDate} />
+              {calendar ?
+                <View style={styles.calendarContainer}>
+                  <CalendarPicker scrollable selectedDayColor={'green'} onDateChange={onDateChange} disabledDates={selectedDates} disabledDatesTextStyle={styles.disableDates}
+                    textStyle={{
+                      // customize font family
+                      fontFamily: Fonts.Poppins600, // customize font size
+                    }}
+                    todayBackgroundColor="#f2f2f2" // customize today's background color
+                    todayTextStyle={{ color: 'blue' }} // customize today's text color
+                    selectedDayTextColor="#ffffff" // customize selected day text color
+                  />
+                </View>
+                :
+                <View>
+                  {/* <Text style={{ color:}}>Todays Date: {startDate}</Text> */}
                 </View>
               }
 
-              <View>
-                <Text style={styles.recordText}>SELECTED DATE: {startDate}</Text>
-              </View>
 
 
 
-              <Text style={styles.titleDevices}> Ultrasonic Sensor - Distance Calculator </Text>
-              <AnimatedCircularProgress
+
+
+              {/* <AnimatedCircularProgress
                 size={250}
                 width={15}
                 backgroundWidth={5}
@@ -692,40 +790,74 @@ const Inventory = () => {
                 lineCap="round">
                 {fill => <Text style={styles.points}>{percentage}%</Text>}
 
+              </AnimatedCircularProgress> */}
+              <AnimatedCircularProgress
+                size={250}
+                width={15}
+                backgroundWidth={5}
+                fill={fill}
+                tintColor="green"
+                tintColorSecondary="green"
+                backgroundColor="#d94826"
+                // arcSweepAngle={240}
+                // rotation={240}
+                lineCap="round"
+                style={styles.circularProgress}
+              >
+                {fill => (
+                  <View style={styles.progressContainer}>
+                    <Text style={styles.percentage}>{percentage}%</Text>
+                  </View>
+                )}
               </AnimatedCircularProgress>
 
 
               {
                 (shiftOne || shiftTwo) &&
                 <Pressable style={styles.buttonStyle}>
-                  <Text style={styles.recordText} onPress={() => handleShift(percentage)} >{shiftOne ? 'Shift One Start' : 'Shift Two Start'}</Text>
+                  <Text style={styles.recordText} onPress={() => setShowModal(true)} >{shiftOne ? 'Shift One Start' : 'Shift Two Start'}</Text>
                 </Pressable>
               }
               {endShift &&
                 <Pressable style={styles.buttonStyle}>
-                  <Text style={styles.recordText} onPress={() => calculateSale(percentage)}>
+                  <Text style={styles.recordText} onPress={() => calculateSale(capacity)}>
                     {shiftOne ? 'End Shift One' : 'End Shift Two'}
                   </Text>
                 </Pressable>
               }
 
+
               {percentage > 80 && <Text style={[styles.titleDevices, { color: "red" }]}> CRITICAL POINT REACHED! PLEASE STOP!</Text>}
             </View>
           }
 
-          <LoadPetrolSheet />
+          {/* <LoadPetrolSheet /> */}
           <ConfirmationModal
+            onChangeName={name => setSaleObject({ ...saleObject, supervisor_name: name })}
+            leftButtonText={'Submit'}
             header={'Start Shift'}
-            body={'Are you sure you want to start the Shift?'}
             isVisible={showModal}
             onYes={() => {
-              setShowModal(false);
+              handleShift(capacity)
             }}
             onClose={() => {
 
               setShowModal(false); // Close the modal
             }}
-          // Other props...
+
+          />
+
+          <LoadPetrolModal
+            onChangeName={name => console.log('name', name)}
+            leftButtonText={'Submit'}
+            header={'How much petrol is there to load?'}
+            isVisible={loadPetrolSheet}
+            onYes={() => handleLoad(capacity)}
+            onClose={() => {
+
+              setShowModal(false); // Close the modal
+            }}
+
           />
 
 
@@ -747,6 +879,23 @@ const boxShadow = {
 };
 
 const styles = StyleSheet.create({
+
+  circularProgress: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  progressContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+  },
+  percentage: {
+    fontSize: 24,
+    color: 'green',
+    fontWeight: 'bold',
+  },
   engine: {
     position: 'absolute',
     right: 10,
@@ -866,10 +1015,12 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   disableDates: {
-    color: 'green',
-    backgroundColor: 'red',
-    borderRadius: scale(100),
-    padding: (5)
+    color: Colors.Black,
+
+    fontFamily: Fonts.Poppins800,
+    padding: scale(2)
+
+
   },
 
   container: {
@@ -895,6 +1046,10 @@ const styles = StyleSheet.create({
     borderRadius: 100,
 
   },
+  calendarContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+  }
 });
 
 export default Inventory;

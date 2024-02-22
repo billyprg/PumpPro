@@ -1,12 +1,6 @@
 import React from 'react';
 
-import {
-  View,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-} from 'react-native';
+import {View, Modal, StyleSheet,TextInput} from 'react-native';
 import {Colors, Metrix, Fonts} from '../../config';
 
 import Icons from '../../config/icons';
@@ -15,7 +9,7 @@ import CustomButton from '../Buttons/CustomButton';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import CustomInput from '../Inputs/Input';
 
-export default function ConfirmationModal({
+export default function LoadPetrolModal({
   onChangeName,
   isVisible,
   onYes = () => {},
@@ -44,41 +38,26 @@ export default function ConfirmationModal({
             <CustomText.HeadingText style={styles.header} text={header} />
 
             <View style={styles.horizontalLine}></View>
-            <View style={{backgroundColor: Colors.White}}>
-              <TextInput
-                onChangeText={onChangeName}
-                style={{
-                  color: Colors.Black,
-                  fontSize: scale(14),
-                  fontFamily: Fonts.Poppins600,
-                  borderColor: Colors.Primary,
-                  borderWidth: 2,
-                  borderRadius: scale(8),
-                  alignItems: 'center',
-                  marginTop: verticalScale(20),
-                  width: '90%',
-                  paddingHorizontal: moderateScale(15),
-                  alignSelf: 'center',
-                  paddingTop:10
-                  
-                }}
-                placeholder={'Enter Manager name'}
-                multiline={true}
-                textAlignVertical="top"
-                textAlign="left"
-                placeholderTextColor={Colors.Black}
-                maxLength={150}
-              />
 
-              <View style={styles.buttonsView}>
-                <CustomButton
-                  restyleContainer={styles.restyleButton}
-                  onPress={onYes}
-                  restyleText={styles.yesTextStyle}
-                  // gradientStyle={styles.yesButtonGradient}
-                  text={leftButtonText}
-                />
-              </View>
+            <TextInput
+              onChangeText={onChangeName}
+              style = {styles.inputStyle}
+              placeholder={'Load petrol amount'}
+              multiline={true}
+              placeholderTextColor={Colors.Black}
+              maxLength={150}
+            />
+
+        
+
+            <View style={styles.buttonsView}>
+              <CustomButton
+                restyleContainer={styles.restyleButton}
+                onPress={onYes}
+                restyleText={styles.yesTextStyle}
+                // gradientStyle={styles.yesButtonGradient}
+                text={leftButtonText}
+              />
             </View>
           </View>
         </View>
@@ -92,7 +71,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 10,
-    // backgroundColor:Colors.Primary
   },
 
   modalView: {
@@ -102,26 +80,40 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(98,105,143,.7)',
   },
+  inputStyle:{
+    flex:1,
+    // alignItems: 'center',
+    // flexDirection: 'row',
+    // marginTop: verticalScale(20),
+    // width: '100%',
+    // paddingHorizontal: moderateScale(15),
+    // height: verticalScale(50),
+    // borderColor: Colors.Primary,
+    // borderRadius: scale(10),
+    color: Colors.Black,
+    fontSize: scale(14),
+    
+  }
+,
   modalContent: {
     width: Metrix.HorizontalSize(345),
     borderRadius: Metrix.VerticalSize(10),
-    backgroundColor: Colors.Primary,
+    backgroundColor: Colors.White,
   },
 
   header: {
-    color: Colors.White,
+    color: Colors.Black,
     fontFamily: Fonts.Poppins700,
     fontSize: Metrix.customFontSize(20),
     marginVertical: Metrix.VerticalSize(10),
     top: 2,
-
     // padding: Metrix.VerticalSize(10),
   },
 
   horizontalLine: {
     height: 1,
-    borderBottomColor: Colors.Yellow,
-    borderWidth: 1,
+    borderBottomColor: Colors.LightGray,
+    borderWidth: 0.2,
   },
 
   bodyText: {
@@ -137,11 +129,13 @@ const styles = StyleSheet.create({
   buttonsView: {
     // flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
+
   },
 
   restyleButton: {
     marginHorizontal: Metrix.VerticalSize(10),
+    
   },
   yesTextStyle: {
     color: Colors.White,
@@ -156,16 +150,5 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: Metrix.VerticalSize(10),
   },
 
-  cancelTextStyle: {
-    color: Colors.Secondary,
-    fontFamily: Fonts.Poppins600,
-    fontSize: scale(12),
-  },
 
-  cancelButtonGradient: {
-    width: Metrix.HorizontalSize(172.5),
-    height: Metrix.VerticalSize(52),
-    borderRadius: Metrix.VerticalSize(0),
-    borderBottomRightRadius: Metrix.VerticalSize(10),
-  },
 });

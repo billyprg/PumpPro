@@ -49,8 +49,9 @@ const Sales = () => {
           <Picker
             selectedValue={filter}
             mode = {'dropdown'}
+            style={{ color: 'black' }}
             onValueChange={value => setFilter(value)}>
-            <Picker.Item label="Daily" value="daily" />
+            <Picker.Item  label="Daily" value="daily" />
             <Picker.Item label="Monthly" value="monthly" />
             <Picker.Item label="Yearly" value="yearly" />
           </Picker>

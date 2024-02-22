@@ -14,6 +14,7 @@ export class AuthRoutes {
   export class ManagerAppRoutes {
    static ADD_VENDOR = 'auth/supplier/store';
    static GET_VENDOR = 'auth/supplier';
+   static GET_RENT = 'auth/rental-aggrement';
   }
   
   

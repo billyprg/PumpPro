@@ -2,14 +2,15 @@ import {StyleSheet, Text, View, Dimensions} from 'react-native';
 import React from 'react';
 import {LineChart} from 'react-native-chart-kit';
 import {Picker} from '@react-native-picker/picker';
-import {Colors, Fonts} from '../../config';
+import {Colors, Fonts, Metrix} from '../../config';
+import {verticalScale} from 'react-native-size-matters';
 
 const GraphComponent = ({filter, selectedValue, onValueChange, graph}) => {
   const dummyData = {
     labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June'],
     datasets: [
       {
-        data: ['1000', '500', '200', '50000'],
+        data: ['100', '50', '20', '5000'],
       },
     ],
   };
@@ -19,7 +20,6 @@ const GraphComponent = ({filter, selectedValue, onValueChange, graph}) => {
   //   : [];
   // console.log('graphData===>', graphData);
 
- 
   // const data = {
   //   labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June'],
   //   datasets: [
@@ -29,7 +29,7 @@ const GraphComponent = ({filter, selectedValue, onValueChange, graph}) => {
   //   ],
   // };
   return (
-    <View>
+    <View style={{alignItems:'center',marginVertical:verticalScale(20)}}>
       {/* {filter ? (
         <Picker
           style={styles.pickerStyle}
@@ -44,8 +44,9 @@ const GraphComponent = ({filter, selectedValue, onValueChange, graph}) => {
       ) : null} */}
 
       <LineChart
-        data={graph ? graph : dummyData}
-        width={Dimensions.get('window').width}
+        // data={graph ? graph : dummyData}
+        data={dummyData}
+        width={Dimensions.get('window').width - 50}
         height={220}
         //   yAxisLabel="Sale"
         //   xAxisLabel="Date"
@@ -65,7 +66,10 @@ const GraphComponent = ({filter, selectedValue, onValueChange, graph}) => {
             stroke: '#ffa726',
           },
         }}
+        bezier 
       />
+
+     
     </View>
   );
 };

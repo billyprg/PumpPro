@@ -1,4 +1,4 @@
-import { ADD_VENDOR, ADD_VENDOR_FAILURE, ADD_VENDOR_SUCCESS, GET_VENDOR, GET_VENDOR_FAILURE, GET_VENDOR_SUCCESS, POST_SHIFT_END, POST_SHIFT_END_FAILURE, POST_SHIFT_END_SUCCESS, POST_SHIFT_START, POST_SHIFT_START_FAILURE, POST_SHIFT_START_SUCCESS } from "../../constants";
+import { ADD_VENDOR, ADD_VENDOR_FAILURE, ADD_VENDOR_SUCCESS, COLLECT_RENT, COLLECT_RENT_FAILURE, COLLECT_RENT_SUCCESS, GET_VENDOR, GET_VENDOR_FAILURE, GET_VENDOR_SUCCESS, POST_SHIFT_END, POST_SHIFT_END_FAILURE, POST_SHIFT_END_SUCCESS, POST_SHIFT_START, POST_SHIFT_START_FAILURE, POST_SHIFT_START_SUCCESS, RENT, RENT_FAILURE, RENT_SUCCESS } from "../../constants";
 
 export default class ManagerAppAction {
 
@@ -46,11 +46,12 @@ export default class ManagerAppAction {
         }
     }
 
-    static PostShiftStart(payload,cb) {
+    static PostShiftStart(payload) {
         return {
             type: POST_SHIFT_START,
             payload,
-            cb
+            
+            
         }
     }
     static PostShiftStartSuccess(payload) {
@@ -65,11 +66,11 @@ export default class ManagerAppAction {
         }
     }
 
-    static PostShiftEnd(payload,cb) {
+    static PostShiftEnd(payload) {
         return {
             type: POST_SHIFT_END,
             payload,
-            cb
+            
         }
     }
     static PostShiftEndSuccess(payload) {
@@ -99,6 +100,45 @@ export default class ManagerAppAction {
     static LogoutFailure() {
         return {
             type: LOGOUT_FAILURE
+        }
+    }
+
+
+    static Rent(payload) {
+        return {
+            type: RENT,
+            payload,
+            
+        }
+    }
+    static RentSuccess(payload) {
+        return {
+            type: RENT_SUCCESS,
+            payload
+        }
+    }
+    static RentFailure() {
+        return {
+            type: RENT_FAILURE
+        }
+    }
+
+    static CollectRent(payload) {
+        return {
+            type: COLLECT_RENT,
+            payload,
+            
+        }
+    }
+    static CollectRentSuccess(payload) {
+        return {
+            type: COLLECT_RENT_SUCCESS,
+            payload
+        }
+    }
+    static CollectRentFailure() {
+        return {
+            type: COLLECT_RENT_FAILURE
         }
     }
     

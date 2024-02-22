@@ -13,8 +13,9 @@ const SalesTable = ({item}) => {
   const renderRows = ({ item }) => (
     <DataTable.Row key={item.date}>
       <DataTable.Cell textStyle={styles.row}>{item.date}</DataTable.Cell>
-      <DataTable.Cell textStyle={styles.row}>{item.quantity_liter}</DataTable.Cell>
+      <DataTable.Cell textStyle={styles.row}>{item.quantity_liter.toFixed()}</DataTable.Cell>
       <DataTable.Cell textStyle={styles.row}>{item.total_amount}</DataTable.Cell>
+      <DataTable.Cell textStyle={styles.row}>{item.supervisor_name}</DataTable.Cell>
     </DataTable.Row>
   );
 
@@ -28,6 +29,7 @@ const SalesTable = ({item}) => {
           <DataTable.Title textStyle={styles.title}>Date</DataTable.Title>
           <DataTable.Title textStyle={styles.title}>Litres</DataTable.Title>
           <DataTable.Title textStyle={styles.title}>Sale</DataTable.Title>
+          <DataTable.Title textStyle={styles.title}>Manager</DataTable.Title>
         </DataTable.Header>
 
         {/* Render filtered rows */}

@@ -19,7 +19,7 @@ const initialState = {
   posts: [],
   shiftOne: false,
   shiftTwo: false,
-  currDate: '',
+  currDate: [],
   revenue : []
 };
 

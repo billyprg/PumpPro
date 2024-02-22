@@ -16,6 +16,7 @@ import Inventory from '../../containers/Inventory/Inventory'
 import CurrentRates from '../../containers/CurrentRates/CurrentRates'
 import Sales from '../../containers/Sales/Sales'
 import { AdminMoreNavigator } from './BottomStacks'
+import Rents from '../../containers/Rents/Rents'
 
 export const AdminAppStack = {
     // Home: {
@@ -72,6 +73,12 @@ export const MoreStack = {
         component: CurrentRates,
         key: 'CurrentRates',
     },
+    Rents: {
+        name: 'Rents',
+        component: Rents,
+        key: 'Rents',
+    },
+
 
   }
 
