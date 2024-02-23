@@ -36,7 +36,7 @@ export default class CommonMiddleware {
   }
 
   static *GetCurrentRates({payload}) {
-    const {token} = payload
+    const {token} = payload;
     console.log('token', token);
     try {
       let response = yield ApiCaller.Get(CommonAppRoutes.GET_CURRENT_RATES, {
@@ -47,7 +47,6 @@ export default class CommonMiddleware {
 
       if (response?.status === 200) {
         yield put(CommonAction.GetCurrentRatesSuccess(response?.data));
-        
       } else {
         yield put(CommonAction.GetCurrentRatesSuccess());
         showToast('error', `${response?.data?.error?.message}`);
@@ -65,15 +64,27 @@ export default class CommonMiddleware {
     const {action} = payload;
     console.log('token', token);
     try {
-      let response = yield ApiCaller.Get(`auth/sale/group/${action}`, {
-        Authorization: `Bearer ${token}`,
-      });
+      let response;
+      if (action === '') {
+         response = yield ApiCaller.Get(`auth/sale/`, {
+          Authorization: `Bearer ${token}`,
+        });
+      } else {
+         response = yield ApiCaller.Get(`auth/sale/group/${action}`, {
+          Authorization: `Bearer ${token}`,
+        });
+      }
 
       console.log('response', response);
 
       if (response?.status === 200) {
-        yield put(CommonAction.GetSalesSuccess(response?.data?.data));
-        
+        if(action === '') {
+          yield put(CommonAction.GetSalesSuccess(response?.data));
+        }
+        else{
+          yield put(CommonAction.GetSalesSuccess(response?.data?.data));
+        }
+       
       } else {
         yield put(CommonAction.GetSalesFailure());
         showToast('error', `${response?.data?.error?.message}`);
@@ -86,7 +97,7 @@ export default class CommonMiddleware {
     }
   }
 
-  static *Expenses({payload,cb}) {
+  static *Expenses({payload, cb}) {
     const {token} = payload;
     console.log('token', token);
     try {
@@ -99,7 +110,7 @@ export default class CommonMiddleware {
       if (response?.status === 200) {
         yield put(CommonAction.ExpensesSuccess());
         showToast('error', `${response?.status.message}`);
-        cb && cb()
+        cb && cb();
       } else {
         yield put(CommonAction.ExpensesFailure());
         showToast('error', `${response?.data?.error?.message}`);
@@ -111,7 +122,6 @@ export default class CommonMiddleware {
       showToast('error', `${err?.data?.error?.message}`);
     }
   }
-
 
   static *GetExpenses({payload}) {
     const {token} = payload;
@@ -125,7 +135,6 @@ export default class CommonMiddleware {
 
       if (response?.status === 200) {
         yield put(CommonAction.GetExpensesSuccess(response?.data));
-        
       } else {
         yield put(CommonAction.GetExpensesFailure());
         showToast('error', `${response?.data?.error?.message}`);
@@ -138,7 +147,7 @@ export default class CommonMiddleware {
     }
   }
 
-  static *DeleteExpenses({payload,cb}) {
+  static *DeleteExpenses({payload, cb}) {
     const {token} = payload;
     console.log('token', token);
     try {
@@ -150,7 +159,6 @@ export default class CommonMiddleware {
 
       if (response?.status === 200) {
         yield put(CommonAction.DeleteExpensesSuccess(response?.data));
-        
       } else {
         yield put(CommonAction.DeleteExpensesFailure());
         showToast('error', `${response?.data?.error?.message}`);
@@ -162,5 +170,4 @@ export default class CommonMiddleware {
       showToast('error', `${err?.data?.error?.message}`);
     }
   }
-
 }

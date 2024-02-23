@@ -11,6 +11,9 @@ import {
   GET_REVENUE,
   GET_REVENUE_SUCCESS,
   GET_REVENUE_FAILURE,
+  FUTURE_SALE,
+  FUTURE_SALE_SUCCESS,
+  FUTURE_SALE_FAILURE,
 } from '../../constants';
 
 const initialState = {
@@ -20,7 +23,8 @@ const initialState = {
   shiftOne: false,
   shiftTwo: false,
   currDate: [],
-  revenue : []
+  revenue : [],
+  futureSale : []
 };
 
 export default function AdminAppReducer(state = initialState, action) {
@@ -63,6 +67,25 @@ export default function AdminAppReducer(state = initialState, action) {
         loader: false,
       };
       break;
+
+      case FUTURE_SALE:
+        state = {
+          ...state,
+          loader: true,
+        };
+        break;
+      case FUTURE_SALE_SUCCESS:
+        state = {
+          futureSale: action.payload,
+          loader: false,
+        };
+        break;
+      case FUTURE_SALE_FAILURE:
+        state = {
+          ...state,
+          loader: false,
+        };
+        break;
 
     case SHIFT_ONE_STATUS:
       state = {

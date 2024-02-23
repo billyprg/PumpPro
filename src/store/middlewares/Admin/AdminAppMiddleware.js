@@ -1,16 +1,14 @@
-
 import {NavigationService, ApiCaller, showToast} from '../../../config';
 import {put} from 'redux-saga/effects';
 import {AuthRoutes} from '../../config/Constants';
 import {baseUrl} from '../../config/variables';
 import {AppStack} from '../../config/navigationConfig/AppStack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AdminAppRoutes } from '../../../config/Constants';
-import { AdminAppAction } from '../../actions';
+import {AdminAppRoutes} from '../../../config/Constants';
+import {AdminAppAction, ManagerAppAction} from '../../actions';
 // import { AppStack } from '../../config/navigationConfig/AppStack';
 
 export default class AdminAppMiddleware {
-
   static *GetRevenue({payload}) {
     const {token} = payload;
     try {
@@ -18,7 +16,7 @@ export default class AdminAppMiddleware {
         Authorization: `Bearer ${token}`,
       });
 
-      console.log('response', response?.data);
+      console.log('response iin revenue', response?.data);
 
       if (response?.status === 200) {
         yield put(AdminAppAction.GetRevenueSuccess(response?.data));
@@ -29,17 +27,38 @@ export default class AdminAppMiddleware {
     } catch (err) {
       console.log(err);
       yield put(AdminAppAction.GetRevenueFailure());
-      console.log(`%c${err.name}`, "color: red", ' => ', err)
-      showToast("error", `${err?.data?.error}`)
+      console.log(`%c${err.name}`, 'color: red', ' => ', err);
+      showToast('error', `${err?.data?.error}`);
     }
   }
 
-
-  static *SetUser({ payload }) {
+  static *GetFutureSales({payload}) {
+    const {token} = payload;
+    console.log('token in future', token);
     try {
-        AsyncStorage.setItem("user", JSON.stringify(payload))
+      let response = yield ApiCaller.Get(`auth/sale/future`, {
+        Authorization: `Bearer ${token}`,
+      });
+
+      console.log('response in future', response);
+
+      if (response?.status === 200) {
+        yield put(AdminAppAction.FutureSaleSuccess(response?.data));
+      } else {
+        yield put(AdminAppAction.FutureSaleFailure());
+        showToast('error', `${response?.data?.error?.message}`);
+      }
+    } catch (err) {
+      console.log(err);
+      yield put(AdminAppAction.FutureSaleFailure());
+      console.log(`%c${err.name}`, 'color: red', ' => ', err);
+      showToast('error', `${err?.data?.error?.message}`);
     }
-    catch (err) {
-    }
-}
+  }
+
+  static *SetUser({payload}) {
+    try {
+      AsyncStorage.setItem('user', JSON.stringify(payload));
+    } catch (err) {}
+  }
 }

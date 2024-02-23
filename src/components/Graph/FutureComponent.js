@@ -5,7 +5,7 @@ import {Picker} from '@react-native-picker/picker';
 import {Colors, Fonts, Metrix} from '../../config';
 import {scale, verticalScale} from 'react-native-size-matters';
 
-const GraphComponent = ({graph}) => {
+const FutureComponent = ({graph}) => {
   const dummyData = {
     labels: [
       'Jan',
@@ -21,15 +21,19 @@ const GraphComponent = ({graph}) => {
     ],
     datasets: [
       {
-        data: ['100', '50', '20', '5000'],
+        data: ['50.25', '95', '141', '199','100','150','40','45','46','47'],
       },
     ],
   };
 
-  // console.log('graph==>', graph);
-  // const graphData = graph.map(entry => entry.total_amount);
-  let graphData = graph.map(item => item.sale_in_rs);
-  // : [];
+  console.log('future==>', graph);
+  // const graphData = graph.future-data.map(entry => entry.total_amount);
+
+  const graphData = graph['future-data'].map(entry => entry.total_amount);
+
+
+  // let graphData = graph?.map(item => item.sale_in_rs);
+  // // : [];
   // console.log('graphData===>', graphData);
 
   const data = {
@@ -142,7 +146,7 @@ const GraphComponent = ({graph}) => {
   );
 };
 
-export default GraphComponent;
+export default FutureComponent;
 
 const styles = StyleSheet.create({
   pickerStyle: {},

@@ -17,6 +17,8 @@ import CurrentRates from '../../containers/CurrentRates/CurrentRates'
 import Sales from '../../containers/Sales/Sales'
 import { AdminMoreNavigator } from './BottomStacks'
 import Rents from '../../containers/Rents/Rents'
+import InsightScreen from '../../containers/Admin/AdminHome/InsightScreen'
+import Purchase from '../../containers/Purchase/Purchase'
 
 export const AdminAppStack = {
     // Home: {
@@ -31,29 +33,20 @@ export const AdminAppStack = {
         key: 'BottomStack'
     }, 
 
-    // More: {
-    //     name: 'More',
-    //     component: More,
-    //     key: 'More',
-    // },
 
-    // Expenses: {
-    //     name: 'Expenses',
-    //     component: Expenses,
-    //     key: 'Expenses',
-    // },
+
+    InsighScreen: {
+        name: 'InsighScreen',
+        component: InsightScreen,
+        key: 'InsighScreen',
+    },
 
     Inventory: {
         name: 'Inventory',
         component: Inventory,
         key: 'Inventory',
     },
-
-    // CurrentRates: {
-    //     name: 'CurrentRates',
-    //     component: CurrentRates,
-    //     key: 'CurrentRates',
-    // },  
+ 
 }
 
 export const MoreStack = {
@@ -78,6 +71,13 @@ export const MoreStack = {
         component: Rents,
         key: 'Rents',
     },
+
+    Purchase: {
+        name: 'Purchase',
+        component: Purchase,
+        key: 'Purchase',
+    },
+
 
 
   }

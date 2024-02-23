@@ -29,9 +29,9 @@ import CalendarPicker from "react-native-calendar-picker";
 
 
 
-let r = 7.3;
+let r = 7.7;
 let pi = 3.14;
-let maxHeight = 27;
+let maxHeight = 26;
 let actualHeight; // in cm
 let capacity;
 let volume;
@@ -90,13 +90,15 @@ import BottomSheet from '../../components/RBSheet/RBSheet';
 import { GlobalStyle } from '../../constants/GlobalStyle';
 import CustomInput from '../../components/Inputs/Input';
 import Icons from '../../config/icons';
-import { Colors, Metrix, Fonts } from '../../config';
+import { Colors, Metrix, Fonts, showToast } from '../../config';
 import { useForm } from 'react-hook-form';
 import SalesFunctions from '../../config/util/HelperFunctions/SalesFunctions';
 import ConfirmationModal from '../../components/ConfirmationModal/ConfirmationModal';
 import moment from 'moment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadPetrolModal from '../../components/LoadPetrolModal/LoadPetrolModal';
+import AlertModal from '../../components/AlertModal/AlertModal';
+import LinearGradient from 'react-native-linear-gradient';
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
@@ -127,7 +129,7 @@ const Inventory = () => {
   const [peripherals, setPeripherals] = useState(
     new Map<Peripheral['id'], Peripheral>(),
   );
-  const [distanceFromObj, setDistanceFromObj] = useState(25);
+  const [distanceFromObj, setDistanceFromObj] = useState(26);
 
   const addOrUpdatePeripheral = (id: string, updatedPeripheral: Peripheral) => {
     // new Map() enables changing the reference & refreshing UI.
@@ -465,7 +467,7 @@ const Inventory = () => {
   const [showSale, setShowSale] = useState(false)
   const [endShiftValue, setEndShiftValue] = useState(0)
   const [loadPetrolSheet, showLoadPetrolSheet] = useState(false);
-
+  const [alertModal, showAlertModal] = useState(false);
   // const petrolInRupees = currentRates.sale_price_per_liter ;
 
 
@@ -509,7 +511,8 @@ const Inventory = () => {
       setShiftOne(false)
       dispatch(ManagerAppAction.PostShiftEnd(payload))
       setShiftTwo(true)
-      setSaleObject({})
+      delete saleObject.supervisor_name
+      // setSaleObject({})
     }
     else {
       setShiftTwo(false)
@@ -522,6 +525,9 @@ const Inventory = () => {
   }
 
   const handleLoad = (currentQuanitity) => {
+    if (currentQuanitity === capacity) {
+      showToast('success', 'Verified!')
+    }
     const petrolLoaded = petrolBeforeLoad - currentQuanitity;
     console.warn(petrolLoaded)
     setCurrentSale(recordStart - petrolBeforeLoad)
@@ -601,6 +607,7 @@ const Inventory = () => {
   const [saleObject, setSaleObject] = useState({})
 
 
+
   useEffect(() => {
     loadSelectedDates();
   }, [])
@@ -669,7 +676,7 @@ const Inventory = () => {
 
 
   const handleShift = (currentLitres: number) => {
-    const {supervisor_name} = saleObject
+    const { supervisor_name } = saleObject
     setShowModal(true)
     setRecordStart(currentLitres);
     let shiftType = shiftOne ? '1' : '2';
@@ -811,6 +818,16 @@ const Inventory = () => {
                 )}
               </AnimatedCircularProgress>
 
+              <LinearGradient
+                style={[styles.inventoryContainer, { marginTop: verticalScale(50) }]}
+                colors={['#f83600', '#fe8c00']}>
+                <Pressable
+                  // onPress={handleInsightPress}
+                  style={styles.inventoryTitle}>
+                  <Text style={styles.headingText}>Litres: {capacity}</Text>
+                </Pressable>
+              </LinearGradient>
+
 
               {
                 (shiftOne || shiftTwo) &&
@@ -827,7 +844,8 @@ const Inventory = () => {
               }
 
 
-              {percentage > 80 && <Text style={[styles.titleDevices, { color: "red" }]}> CRITICAL POINT REACHED! PLEASE STOP!</Text>}
+              {percentage > 80 && <Text style={[styles.titleDevices, { color: "red" }]}> CRITICAL POINT REACHED!</Text>}
+              {percentage <= 5 && showToast('success', 'Please Refill the tank')}
             </View>
           }
 
@@ -856,6 +874,17 @@ const Inventory = () => {
             onClose={() => {
 
               setShowModal(false); // Close the modal
+            }}
+
+          />
+
+          <AlertModal
+            leftButtonText={'Okay'}
+            isVisible={alertModal}
+            onYes={() => showAlertModal(false)}
+            onClose={() => {
+
+              showAlertModal(false); // Close the modal
             }}
 
           />
@@ -944,6 +973,23 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  headingText: {
+    fontFamily: Fonts.Poppins700,
+    fontSize: scale(18),
+    color: Colors.White,
+    textAlign: 'center',
+  },
+
+  inventoryContainer: {
+    justifyContent: 'center',
+    backgroundColor: '#0a398a',
+    borderRadius: scale(10),
+    overflow: 'hidden',
+    marginTop: verticalScale(40),
+    // width: '45%',
+    height: verticalScale(100),
+    width:150
   },
   footer: {
     color: Colors.DarkGray,

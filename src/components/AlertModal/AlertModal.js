@@ -9,12 +9,12 @@ import CustomButton from '../Buttons/CustomButton';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import CustomInput from '../Inputs/Input';
 
-export default function LoadPetrolModal({
-  onChangeName,
+export default function AlertModal({
+  body = 'Please refill the petrol',
   isVisible,
   onYes = () => {},
   onClose = () => {},
-  header = 'Delete Post',
+  header = 'ALERT',
   leftButtonText = 'Yes',
   rightButtonText = 'No',
   style,
@@ -39,28 +39,7 @@ export default function LoadPetrolModal({
 
             <View style={styles.horizontalLine}></View>
 
-            <TextInput
-              style={{
-                color: Colors.Black,
-                fontSize: scale(14),
-                fontFamily: Fonts.Poppins600,
-                borderColor: Colors.Primary,
-                borderWidth: 2,
-                borderRadius: scale(8),
-                alignItems: 'center',
-                marginTop: verticalScale(20),
-                width: '90%',
-                paddingHorizontal: moderateScale(15),
-                alignSelf: 'center',
-                paddingTop: 10,
-              }}
-              placeholder={'Enter Petrol Load Amount'}
-              multiline={true}
-              textAlignVertical="top"
-              textAlign="left"
-              placeholderTextColor={Colors.Black}
-              maxLength={150}
-            />
+            <CustomText.HeadingText style={styles.bodyText} text={body} />
 
             <View style={styles.buttonsView}>
               <CustomButton
@@ -92,19 +71,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(98,105,143,.7)',
   },
-  inputStyle: {
-    flex: 1,
-    // alignItems: 'center',
-    // flexDirection: 'row',
-    // marginTop: verticalScale(20),
-    // width: '100%',
-    // paddingHorizontal: moderateScale(15),
-    // height: verticalScale(50),
-    // borderColor: Colors.Primary,
-    // borderRadius: scale(10),
-    color: Colors.Black,
-    fontSize: scale(14),
-  },
+
   modalContent: {
     width: Metrix.HorizontalSize(345),
     borderRadius: Metrix.VerticalSize(10),

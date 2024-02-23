@@ -13,6 +13,7 @@ const Colors = {
     Success: "#22bb33",
     InputPlaceHolder: "#707070",
     placeholderTextColor: '#707070',
+    Blue: '#0a398a'
 }
 
 

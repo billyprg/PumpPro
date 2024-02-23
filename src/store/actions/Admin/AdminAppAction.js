@@ -1,4 +1,4 @@
-import { CURRENT_DATE, GET_REVENUE, GET_REVENUE_FAILURE, GET_REVENUE_SUCCESS, SHIFT_ONE_STATUS, SHIFT_TWO_STATUS } from "../../constants"
+import { CURRENT_DATE, FUTURE_SALE, FUTURE_SALE_FAILURE, FUTURE_SALE_SUCCESS, GET_REVENUE, GET_REVENUE_FAILURE, GET_REVENUE_SUCCESS, SHIFT_ONE_STATUS, SHIFT_TWO_STATUS } from "../../constants"
 
 
 export default class AdminAppAction {
@@ -54,6 +54,25 @@ export default class AdminAppAction {
     static GetRevenueFailure() {
         return {
             type: GET_REVENUE_FAILURE
+        }
+    }
+
+    static FutureSale(payload) {
+        return {
+            type: FUTURE_SALE,
+            payload,
+            
+        }
+    }
+    static FutureSaleSuccess(payload) {
+        return {
+            type: FUTURE_SALE_SUCCESS,
+            payload
+        }
+    }
+    static FutureSaleFailure() {
+        return {
+            type: FUTURE_SALE_FAILURE
         }
     }
 

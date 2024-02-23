@@ -17,6 +17,7 @@ import {AdminAppAction, CommonAction} from '../../../store/actions';
 import OtherFunctions from '../../../config/util/HelperFunctions/OtherFunctions';
 import Loader from '../../../components/Loader';
 import LiquidProgress from '../../../components/TankContainer/TankContainer';
+import LinearGradient from 'react-native-linear-gradient';
 
 const AdminHome = () => {
   const dispatch = useDispatch();
@@ -26,15 +27,8 @@ const AdminHome = () => {
   const loading = useSelector(state => state.CommonReducer.loader);
   const revenue = useSelector(state => state.AdminAppReducer.revenue);
   const [graphData, setGraphData] = useState(['100', '200', '3500', '4500']);
-
-  console.log('revenue===>', revenue);
-  const [potty, setpotty] = useState(0);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setpotty(true);
-    }, 4000);
-  }, []);
+  const futureData = useSelector(state => state.AdminAppReducer.futureSale);
+  console.log('revenue===>', salesData,futureData);
 
   const data = {
     labels: [
@@ -58,12 +52,12 @@ const AdminHome = () => {
     ],
   };
 
-  useEffect(() => {
-    if (salesData) {
-      handleGraphData(salesData);
-    }
-  }, [salesData]);
-  console.log('graphData===>', graphData);
+  // useEffect(() => {
+  //   if (salesData) {
+  //     handleGraphData(salesData);
+  //   }
+  // }, [salesData]);
+  // console.log('graphData===>', graphData);
 
   console.log('HOME COMPONENT IS RERENDERING');
 
@@ -82,6 +76,13 @@ const AdminHome = () => {
     {id: 3, vendor: 'Suparco', bought: '1.5 ltr'},
   ];
 
+  const handleInsightPress = () => {
+    NavigationService.navigate(AdminAppStack.InsighScreen.name, {
+      data: salesData,
+      futureData : futureData
+    });
+  };
+
   useEffect(() => {
     const payload = {
       token: user?.access_token?.plainTextToken,
@@ -91,11 +92,23 @@ const AdminHome = () => {
 
   useEffect(() => {
     const payload = {
-      action: filterGraph,
+      action: '',
       token: user?.access_token?.plainTextToken,
     };
     dispatch(CommonAction.GetSales(payload));
-  }, [filterGraph]);
+    dispatch(AdminAppAction.FutureSale(payload));
+  }, []);
+
+  useEffect(() => {
+    const payload = {
+      token: user?.access_token?.plainTextToken,
+    };
+    dispatch(AdminAppAction.FutureSale(payload));
+  }, []);
+
+
+  
+
 
   const UsersItem = ({item}) => {
     return (
@@ -119,30 +132,20 @@ const AdminHome = () => {
             paddingHorizontal: moderateScale(20),
             marginTop: verticalScale(20),
           }}>
-          <BalanceCard revenue={revenue?.[0]?.revenue} />
+          <BalanceCard revenue={revenue} />
 
-          <GraphComponent
-          // graph={data}
-          />
+          {/* <View style={{flexDirection: 'row',justifyContent:'space-between',alignItems:'center'}}> */}
+          <LinearGradient
+            style={[styles.inventoryContainer,{marginTop:verticalScale(50)}]}
+            colors={['#f83600', '#fe8c00']}>
+            <Pressable
+              onPress={handleInsightPress}
+              style={styles.inventoryTitle}>
+              <Text style={styles.headingText}>View Insights</Text>
+            </Pressable>
+          </LinearGradient>
 
-          {potty ? (
-            <LiquidProgress
-              backgroundColor={'black'}
-              frontWaveColor={'blue'}
-              backWaveColor={'skyblue'}
-              fill={50}
-              size={290}
-              customMask={
-                <View
-                  style={{
-                    backgroundColor: 'red',
-                    width: 290,
-                    height: 290,
-                  }}></View>
-              }></LiquidProgress>
-          ) : null}
-
-          <Pressable style={styles.inventoryContainer}>
+          <LinearGradient colors={['#0a398a', '#001f4d']} style={[styles.inventoryContainer,{marginTop:verticalScale(30)}]}>
             <Pressable
               onPress={() =>
                 NavigationService.navigate(AdminAppStack.Inventory.name)
@@ -150,9 +153,10 @@ const AdminHome = () => {
               style={styles.inventoryTitle}>
               <Text style={styles.headingText}>View Current Inventory</Text>
             </Pressable>
-          </Pressable>
+          </LinearGradient>
+          {/* </View> */}
 
-          <View style={styles.purchasesMainView}>
+          {/* <View style={styles.purchasesMainView}>
             <View style={styles.purchasesTitle}>
               <Text style={styles.headingText}>Recent Purchases</Text>
             </View>
@@ -182,7 +186,7 @@ const AdminHome = () => {
                 />
               </View>
             </Pressable>
-          </View>
+          </View> */}
           {loading && <Loader isModalLoader />}
         </View>
       </KeyboardAwareScrollView>
@@ -195,22 +199,25 @@ export default AdminHome;
 const styles = StyleSheet.create({
   inventoryContainer: {
     justifyContent: 'center',
-    backgroundColor: Colors.White,
+    backgroundColor: '#0a398a',
     borderRadius: scale(10),
     overflow: 'hidden',
-    marginVertical: verticalScale(40),
+    marginTop: verticalScale(40),
+    // width: '45%',
+    height: verticalScale(100),
   },
   inventoryTitle: {
-    backgroundColor: Colors.Primary,
+    // backgroundColor: Colors.Primary,
     justifyContent: 'center',
     paddingVertical: verticalScale(10),
     paddingHorizontal: moderateScale(10),
     alignItems: 'center',
   },
   headingText: {
-    fontFamily: Fonts.Poppins600,
+    fontFamily: Fonts.Poppins700,
     fontSize: scale(18),
     color: Colors.White,
+    textAlign: 'center',
   },
   content: {
     flexDirection: 'row',

@@ -48,6 +48,12 @@ const More = () => {
 
     {
       id: 4,
+      screenName: 'Purchase',
+      onPress: () => NavigationService.navigate(MoreStack.Purchase.name),
+    },
+
+    {
+      id: 4,
       screenName: 'Logout',
       onPress: () => handleLogout()
     },

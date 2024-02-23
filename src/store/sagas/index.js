@@ -30,6 +30,7 @@ export function* Sagas() {
 
          //Admin
          yield takeLatest(GET_REVENUE, AdminAppMiddleware.GetRevenue),
+         yield takeLatest(GET_REVENUE, AdminAppMiddleware.GetFutureSales),
         
     ])
 }

@@ -101,7 +101,7 @@ export default class ManagerAppMiddleware {
 
       if (response?.status === 200) {
         console.log('response====>', response);
-        yield put(ManagerAppAction.Post(response?.data));
+        yield put(ManagerAppAction.PostShiftEndSuccess(response?.data));
       } else {
         yield put(ManagerAppAction.PostShiftStartFailure());
         showToast('error', `${response?.data?.error?.message}`);

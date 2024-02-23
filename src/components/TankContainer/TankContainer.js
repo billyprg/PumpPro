@@ -19,7 +19,7 @@ const LiquidProgress = ({
   const width = Dimensions.get("window").width;
 
   useEffect(() => {
-    setTimeout(() => {
+   
         Animated.loop(
             Animated.timing(progress, {
               toValue: 2,
@@ -30,18 +30,18 @@ const LiquidProgress = ({
               resetBeforeIteration: true,
             }
           ).start();
-    }, 3000);
+   
   
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
+    
         Animated.spring(fillAnim, {
             toValue: fill,
             useNativeDriver: true,
             tension: 20,
           }).start();
-    }, 3000);
+   
    
   }, [fill]);
 

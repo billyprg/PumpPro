@@ -15,7 +15,7 @@ const Sales = () => {
   const salesData = useSelector(state => state.CommonReducer.sales);
   const dispatch = useDispatch();
 
-  const [filter, setFilter] = useState('daily');
+  const [filter, setFilter] = useState('');
 
   console.log('salesData===>', salesData);
 
@@ -51,7 +51,7 @@ const Sales = () => {
             mode = {'dropdown'}
             style={{ color: 'black' }}
             onValueChange={value => setFilter(value)}>
-            <Picker.Item  label="Daily" value="daily" />
+            <Picker.Item  label="Daily" value="" />
             <Picker.Item label="Monthly" value="monthly" />
             <Picker.Item label="Yearly" value="yearly" />
           </Picker>

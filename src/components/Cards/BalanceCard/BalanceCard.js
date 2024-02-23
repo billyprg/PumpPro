@@ -7,23 +7,24 @@ import {Colors, Fonts, Images} from '../../../config';
 
 const BalanceCard = ({revenue,...props}) => {
   const navigation = useNavigation();
+  console.log('revenue in here', revenue)
   return (
     <View style={[styles.MainBox, props.restyleMain]}>
       <View style={styles.headerView}>
         <View style={styles.imageView}>
           <Image
-            source={Images.Shell}
+            source={Images.Logo}
             style={styles.logo}
             resizeMode="contain"
           />
         </View>
 
-        <Text style={styles.pumpName}>Pump Name</Text>
+        <Text style={styles.pumpName}>Petrol Pro 360</Text>
       </View>
 
       <View style={styles.balanceView}>
       <Text style={styles.balTitle}>Total Revenue</Text>
-        <Text style={styles.BalText}>{revenue} PKR</Text>
+        <Text style={styles.BalText}>{revenue?.[3]?.revenue} PKR</Text>
       </View>
     </View>
   );
@@ -48,9 +49,10 @@ const styles = StyleSheet.create({
 
   pumpName:{
     marginLeft: moderateScale(10),
-    fontFamily: Fonts.Poppins600,
+    fontFamily: Fonts.Poppins700,
     color: Colors.White,
-    fontSize: scale(16)
+    fontSize: scale(16),
+    letterSpacing:10
   },
   imageView: {
     height: scale(50),
